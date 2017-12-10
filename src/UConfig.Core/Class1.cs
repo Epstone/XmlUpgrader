@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace UConfig
+namespace UConfig.Core
 {
     public class Class1
     {
