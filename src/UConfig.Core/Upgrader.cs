@@ -3,6 +3,7 @@
     using System;
     using System.Collections.Generic;
     using System.Dynamic;
+    using System.Threading;
     using System.Xml.Linq;
 
     public class Upgrader
@@ -18,12 +19,20 @@
         private List<dynamic> mapping;
 
 
-        public void Apply(XElement configTree)
+        public XElement Apply()
         {
+            foreach (Type registration in Registrations)
+            {
+                IUpgradableConfig instance = (IUpgradableConfig)Activator.CreateInstance(registration);
+                this.mapping.Add(instance.GetUpgradeMap());
+            }
+
             foreach (var entry in mapping)
             {
                 expandoToXML(entry, "");
             }
+
+            return tree;
         }
 
         private XElement expandoToXML(dynamic node, String nodeName)
@@ -66,5 +75,12 @@
         {
             this.mapping.Add(xpath);
         }
+
+        public void Register<T>() where T :  IUpgradableConfig, new()
+        {
+            this.Registrations.Add(typeof(T));
+        }
+
+        public List<Type> Registrations { get; set; } = new List<Type>();
     }
 }

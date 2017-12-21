@@ -1,10 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Text;
-
-namespace UConfig.Tests.Examples
+﻿namespace UConfig.Test.Examples
 {
-    class ExampleConfigV1
+    public class ExampleConfigV1
     {
+        public string TestString { get; set; }
+
+        public int TestInteger { get; set; }
+
+
     }
 }
