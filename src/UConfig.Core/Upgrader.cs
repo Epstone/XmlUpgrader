@@ -94,7 +94,10 @@
             foreach (UpgradePlan upgradePlan in upgradePlans.OrderBy(x => x.UpgradeToVersion))
             {
                 var upgrader = new FileUpgrader(upgradePlan, configToUpgrade);
+                configToUpgrade = upgrader.Upgrade();   
             }
+
+            configToUpgrade.Document.Save(xmlToUpgrade);
         }
     }
 }

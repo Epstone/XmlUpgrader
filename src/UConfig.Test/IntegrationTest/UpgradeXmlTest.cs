@@ -1,8 +1,5 @@
 ﻿namespace UConfig.Test.IntegrationTest
 {
-    using System;
-    using System.IO;
-    using System.Xml.Linq;
     using Core;
     using Examples;
     using FluentAssertions;
@@ -13,8 +10,8 @@
     {
         private static readonly string ConfigurationXmlDirectory = @"Examples\Xml\";
 
-        [Fact(Skip = "just demo")]
-        public void UpgradeXml()
+        [Fact]
+        public void UpgradeXmlFile()
         {
             var xmlToUpgrade = $@"{ConfigurationXmlDirectory}Config_v1.xml";
             var xmlUpgradeReference = @"Examples\Xml\Config_v2.xml";
@@ -48,13 +45,6 @@
             upgrader.Verify();
         }
 
-        private string SaveAsTemporaryConfig(XElement updatedConfig)
-        {
-            string tempConfigPath = Path.GetTempPath() + Guid.NewGuid() + ".xml";
-            updatedConfig.Save(tempConfigPath);
-            return tempConfigPath;
-        }
-
         private static T GetConfig<T>(string xmlVersion1Path)
         {
             var builderUpdated = new ConfigurationBuilder()
@@ -62,10 +52,5 @@
             IConfigurationRoot configurationRootUpdated = builderUpdated.Build();
             return configurationRootUpdated.Get<T>();
         }
-    }
-
-    public class UpgraderBuilder
-
-    {
     }
 }
