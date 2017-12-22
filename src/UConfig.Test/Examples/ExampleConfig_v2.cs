@@ -3,14 +3,14 @@
     using System.Dynamic;
     using Core;
 
-    class ExampleConfigV2 : IUpgradableConfig
+    internal class ExampleConfigV2 : IUpgradableConfig
     {
-
         public string TestString { get; set; }
 
         public int TestInteger { get; set; }
 
         public string AddedValue { get; set; }
+
         public UpgradePlan GetUpgradePlan()
         {
             dynamic upgradeMap = new ExpandoObject();

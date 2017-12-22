@@ -5,7 +5,5 @@
         public string TestString { get; set; }
 
         public int TestInteger { get; set; }
-
-
     }
 }

@@ -4,7 +4,7 @@
     {
         public UpgradePlan(dynamic valuesToAdd)
         {
-            this.AddedValues = valuesToAdd;
+            AddedValues = valuesToAdd;
         }
 
         public dynamic AddedValues { get; set; }

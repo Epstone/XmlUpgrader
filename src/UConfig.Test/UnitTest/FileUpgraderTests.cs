@@ -26,7 +26,7 @@
         {
             get
             {
-                XElement xmlTree = new XElement("configuration");
+                var xmlTree = new XElement("configuration");
                 xmlTree.SetAttributeValue("version", 1);
                 return xmlTree;
             }
@@ -47,16 +47,16 @@
         [Fact]
         public void AddElement()
         {
-            var configFile = ConfigurationFile.FromXElement(DefaultXmlVersionOne);
+            ConfigurationFile configFile = ConfigurationFile.FromXElement(DefaultXmlVersionOne);
 
             dynamic elementsToAdd = new ExpandoObject();
             elementsToAdd.AddedNumber = "3";
 
-            UpgradePlan upgradePlan = new UpgradePlan(elementsToAdd)
+            var upgradePlan = new UpgradePlan(elementsToAdd)
             {
                 UpgradeToVersion = 2
             };
-            FileUpgrader fileUpgrader = new FileUpgrader(upgradePlan, configFile);
+            var fileUpgrader = new FileUpgrader(upgradePlan, configFile);
 
             ConfigurationFile upgradedConfig = fileUpgrader.Upgrade();
             upgradedConfig.Document.Element("AddedNumber").Value.Should().Be("3");
@@ -66,18 +66,18 @@
         [Fact]
         public void AddElementStructure()
         {
-            var configFile = ConfigurationFile.FromXElement(DefaultXmlVersionOne);
+            ConfigurationFile configFile = ConfigurationFile.FromXElement(DefaultXmlVersionOne);
 
             dynamic elementsToAdd = new ExpandoObject();
             elementsToAdd.AddedStructure = new ExpandoObject();
             elementsToAdd.AddedStructure.SettingOne = "works";
 
-            UpgradePlan upgradePlan = new UpgradePlan(elementsToAdd)
+            var upgradePlan = new UpgradePlan(elementsToAdd)
             {
                 UpgradeToVersion = 2
             };
 
-            FileUpgrader fileUpgrader = new FileUpgrader(upgradePlan, configFile);
+            var fileUpgrader = new FileUpgrader(upgradePlan, configFile);
             ConfigurationFile upgradedConfig = fileUpgrader.Upgrade();
             upgradedConfig.Document.Element("AddedStructure").Element("SettingOne").Value.Should().Be("works");
         }
@@ -85,18 +85,18 @@
         [Fact]
         public void ExtendDeepElementStructure()
         {
-            var configFile = ConfigurationFile.FromXElement(DeepStructuredXmlVersionOne);
+            ConfigurationFile configFile = ConfigurationFile.FromXElement(DeepStructuredXmlVersionOne);
 
             dynamic elementsToAdd = new ExpandoObject();
             elementsToAdd.ExampleStructure = new ExpandoObject();
             elementsToAdd.ExampleStructure.DeepSettingTwo = "Two";
 
-            UpgradePlan upgradePlan = new UpgradePlan(elementsToAdd)
+            var upgradePlan = new UpgradePlan(elementsToAdd)
             {
                 UpgradeToVersion = 2
             };
 
-            FileUpgrader fileUpgrader = new FileUpgrader(upgradePlan, configFile);
+            var fileUpgrader = new FileUpgrader(upgradePlan, configFile);
             ConfigurationFile upgradedConfig = fileUpgrader.Upgrade();
             upgradedConfig.Document.Element("ExampleStructure").Element("DeepSettingOne").Value.Should().Be("One");
             upgradedConfig.Document.Element("ExampleStructure").Element("DeepSettingTwo").Value.Should().Be("Two");

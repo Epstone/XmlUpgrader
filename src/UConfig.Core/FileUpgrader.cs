@@ -6,8 +6,8 @@
 
     internal class FileUpgrader
     {
-        private readonly UpgradePlan upgradePlan;
         private readonly ConfigurationFile configFile;
+        private readonly UpgradePlan upgradePlan;
 
 
         public FileUpgrader(UpgradePlan upgradePlan, ConfigurationFile configFile)
@@ -19,14 +19,14 @@
 
         public ConfigurationFile Upgrade()
         {
-            var treeToUpgrade = new XElement(this.configFile.Document);
+            var treeToUpgrade = new XElement(configFile.Document);
 
             extendXml(upgradePlan.AddedValues, "", treeToUpgrade);
 
-            return new ConfigurationFile()
+            return new ConfigurationFile
             {
                 Document = treeToUpgrade,
-                Version = this.upgradePlan.UpgradeToVersion,
+                Version = upgradePlan.UpgradeToVersion
             };
         }
 
@@ -48,8 +48,7 @@
                 treeToUpgrade.Add(xmlNode);
             }
 
-
-            foreach (var property in (IDictionary<string, object>)node)
+            foreach (KeyValuePair<string, object> property in (IDictionary<string, object>) node)
             {
                 if (IsExpandoObject(property))
                 {
@@ -58,7 +57,7 @@
 
                 else if (IsDynamicList(property))
                 {
-                    foreach (var element in (List<dynamic>)property.Value)
+                    foreach (dynamic element in (List<dynamic>) property.Value)
                     {
                         xmlNode.Add(extendXml(element, property.Key, xmlNode));
                     }
