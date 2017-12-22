@@ -43,6 +43,8 @@
 
         internal ConfigurationFile ApplyForOne(UpgradeMap upgradeMap)
         {
+            var currentTree = new XElement(tree);
+            this.tree = currentTree;
             foreach (var entry in mapping)
             {
                 expandoToXML(entry, "");
@@ -51,7 +53,7 @@
             return new ConfigurationFile()
             {
                 Version = upgradeMap.UpgradeToVersion,
-                Document = tree
+                Document = currentTree
             };
         }
 

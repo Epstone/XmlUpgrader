@@ -1,6 +1,7 @@
 ﻿namespace UConfig.Core
 {
     using System.Xml.Linq;
+    using System.Xml.Schema;
 
     internal class ConfigurationFile
     {
@@ -23,7 +24,7 @@
 
         public void VerifyEqualTo(ConfigurationFile updatedConfig)
         {
-            throw new System.NotImplementedException();
+            XmlUtils.DeepEqualsWithNormalization(this.Document.Document, updatedConfig.Document.Document, null); //todo remove null
         }
     }
 }
