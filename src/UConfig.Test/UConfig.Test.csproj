@@ -191,7 +191,7 @@
     <Compile Include="Examples\ExampleConfig_v1.cs" />
     <Compile Include="Examples\ExampleConfig_v2.cs" />
     <Compile Include="IntegrationTest\UpgradeXmlTest.cs" />
-    <Compile Include="UnitTest\UpgraderTests.cs" />
+    <Compile Include="UnitTest\FileUpgraderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

@@ -41,7 +41,7 @@
             return tree;
         }
 
-        internal ConfigurationFile ApplyForOne(UpgradeMap upgradeMap)
+        internal ConfigurationFile ApplyForOne(UpgradePlan upgradePlan)
         {
             var currentTree = new XElement(tree);
             this.tree = currentTree;
@@ -52,7 +52,7 @@
 
             return new ConfigurationFile()
             {
-                Version = upgradeMap.UpgradeToVersion,
+                Version = upgradePlan.UpgradeToVersion,
                 Document = currentTree
             };
         }
@@ -102,14 +102,14 @@
             {
                 var configurationFile = configurationFiles[i];
                 // todo no version gaps allowed
-                dynamic mapping = this.mapping.FirstOrDefault(m => m.Version == configurationFile.Version + 1);
+                UpgradePlan mapping = this.mapping.FirstOrDefault(m => m.Version == configurationFile.Version + 1);
                 if (mapping == null)
                 {
                     throw new InvalidOperationException($"No upgrade script for xml version {configurationFile.Version} found.");
                 }
 
                 this.tree = configurationFile.Document; // todo do not touch original content
-                ConfigurationFile updatedConfig = ApplyForOne(new UpgradeMap() { AddedValues = mapping });
+                ConfigurationFile updatedConfig = ApplyForOne(mapping);
 
                 // execute the update and compare with reference version
                 configurationFiles[i + 1].VerifyEqualTo(updatedConfig);
@@ -164,11 +164,5 @@
         {
             return xmlFiles.Select(x => new ConfigurationFile(x));
         }
-    }
-
-    public class UpgradeMap
-    {
-        public dynamic AddedValues { get; set; }
-        public int UpgradeToVersion { get; set; }
     }
 }
