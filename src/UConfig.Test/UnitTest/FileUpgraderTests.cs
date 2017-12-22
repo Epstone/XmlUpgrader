@@ -2,8 +2,10 @@
 {
     using System.Dynamic;
     using System.Linq;
+    using System.Linq.Expressions;
     using System.Xml.Linq;
     using Core;
+    using Examples;
     using FluentAssertions;
     using Xunit;
 
@@ -52,10 +54,10 @@
             dynamic elementsToAdd = new ExpandoObject();
             elementsToAdd.AddedNumber = "3";
 
-            var upgradePlan = new UpgradePlan(elementsToAdd)
-            {
-                UpgradeToVersion = 2
-            };
+            var upgradePlan = new UpgradePlan()
+            .AddSettingsToAdd(elementsToAdd)
+            .SetVersion(2);
+
             var fileUpgrader = new FileUpgrader(upgradePlan, configFile);
 
             ConfigurationFile upgradedConfig = fileUpgrader.Upgrade();
@@ -72,10 +74,9 @@
             elementsToAdd.AddedStructure = new ExpandoObject();
             elementsToAdd.AddedStructure.SettingOne = "works";
 
-            var upgradePlan = new UpgradePlan(elementsToAdd)
-            {
-                UpgradeToVersion = 2
-            };
+            var upgradePlan = new UpgradePlan()
+            .SetVersion(2)
+            .AddSettingsToAdd(elementsToAdd);
 
             var fileUpgrader = new FileUpgrader(upgradePlan, configFile);
             ConfigurationFile upgradedConfig = fileUpgrader.Upgrade();
@@ -91,10 +92,9 @@
             elementsToAdd.ExampleStructure = new ExpandoObject();
             elementsToAdd.ExampleStructure.DeepSettingTwo = "Two";
 
-            var upgradePlan = new UpgradePlan(elementsToAdd)
-            {
-                UpgradeToVersion = 2
-            };
+            var upgradePlan = new UpgradePlan()
+                                    .SetVersion(2)
+                                    .AddSettingsToAdd(elementsToAdd);
 
             var fileUpgrader = new FileUpgrader(upgradePlan, configFile);
             ConfigurationFile upgradedConfig = fileUpgrader.Upgrade();
@@ -103,7 +103,18 @@
             upgradedConfig.Document.Elements("ExampleStructure").Count().Should().Be(1);
         }
 
-        // todo add setting structure 2 levels deep
+        [Fact]
+        public void RenameElement()
+        {
+            ConfigurationFile configFile = ConfigurationFile.FromXElement(DefaultXmlVersionOne);
+
+            var upgradePlan = new ExampleRenamingConfigV2().GetUpgradePlan();
+
+            var fileUpgrader = new FileUpgrader(upgradePlan, configFile);
+            ConfigurationFile upgradedConfig = fileUpgrader.Upgrade();
+            upgradedConfig.Document.Element("ExampleStructure").Element("DeepSettingOne").Value.Should().Be("One");
+        }
+
         // todo rename setting
         // todo remove setting
         // todo load xml without version has flag set

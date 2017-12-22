@@ -2,12 +2,27 @@
 {
     public class UpgradePlan
     {
-        public UpgradePlan(dynamic valuesToAdd)
+        public UpgradePlan AddSettingsToAdd(dynamic elementsToAdd)
         {
-            AddedValues = valuesToAdd;
+            this.AddedSettings = elementsToAdd;
+            return this;
         }
 
-        public dynamic AddedValues { get; set; }
-        public int UpgradeToVersion { get; set; }
+        public UpgradePlan AddSettingsToRename(RenameMap renameMap)
+        {
+            this.RenamedSettings = renameMap;
+            return this;
+        }
+
+        internal RenameMap RenamedSettings { get; set; }
+
+        internal dynamic AddedSettings { get; set; }
+        public int UpgradeToVersion { get; internal set; }
+
+        public UpgradePlan SetVersion(int version)
+        {
+            this.UpgradeToVersion = version;
+            return this;
+        }
     }
 }

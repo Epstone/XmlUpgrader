@@ -21,7 +21,7 @@
         {
             var treeToUpgrade = new XElement(configFile.Document);
 
-            extendXml(upgradePlan.AddedValues, "", treeToUpgrade);
+            extendXml(upgradePlan.AddedSettings, "", treeToUpgrade);
 
             return new ConfigurationFile
             {

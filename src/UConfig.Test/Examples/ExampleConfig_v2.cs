@@ -13,9 +13,11 @@
 
         public UpgradePlan GetUpgradePlan()
         {
-            dynamic upgradeMap = new ExpandoObject();
-            upgradeMap.AddedValue = "I'm an added value!";
-            return new UpgradePlan(upgradeMap);
+            dynamic addedSettings = new ExpandoObject();
+            addedSettings.AddedValue = "I'm an added value!";
+            var upgradePlan = new UpgradePlan();
+            upgradePlan.AddedSettings(addedSettings);
+            return upgradePlan;
         }
 
         public int Version => 2;
