@@ -11,10 +11,12 @@
 
     public class UpgradeXmlTest
     {
+        private static readonly string ConfigurationXmlDirectory = @"Examples\Xml\";
+
         [Fact]
         public void UpgradeXml()
         {
-            var xmlVersion1Path = @"Examples\Xml\Config_v1.xml";
+            var xmlVersion1Path = $@"{ConfigurationXmlDirectory}Config_v1.xml";
             var xmlVersion2Path = @"Examples\Xml\Config_v2.xml";
             XElement configV1 = XElement.Load(xmlVersion1Path);
 
@@ -34,6 +36,19 @@
             updatedConfig.ShouldBeEquivalentTo(expected);
         }
 
+        [Fact]
+        public void AutomaticVerificationProcess()
+        {
+            // register all upgradable interfaces
+            var upgrader = new Upgrader();
+            upgrader.RegisterAll(this.GetType().Assembly);
+            
+            // register all config files
+            upgrader.AddXmlConfigurationDir(ConfigurationXmlDirectory);
+
+            // call verify to get an automated verification of the upgrades
+            upgrader.Verify();
+        }
 
         private string SaveAsTemporaryConfig(XElement updatedConfig)
         {
@@ -49,5 +64,10 @@
             IConfigurationRoot configurationRootUpdated = builderUpdated.Build();
             return configurationRootUpdated.Get<T>();
         }
+    }
+
+    public class UpgraderBuilder
+
+    {
     }
 }
