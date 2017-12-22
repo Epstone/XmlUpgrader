@@ -1,6 +1,5 @@
 ﻿namespace UConfig.Test.UnitTest
 {
-    using System.Configuration;
     using System.Dynamic;
     using System.Xml.Linq;
     using Core;
@@ -16,24 +15,17 @@
                 new XElement("ExampleString", "test"),
                 new XElement("ExampleNumber", 2)
             );
-            ConfigurationFile configFile = new ConfigurationFile()
+            ConfigurationFile configFile = new ConfigurationFile
             {
                 Document = oldTree,
                 Version = 1
             };
-
-            Upgrader upgrader = new Upgrader(oldTree);
-
 
             dynamic elementsToAdd = new ExpandoObject();
             elementsToAdd.AddedNumber = "3";
 
             UpgradePlan upgradePlan = new UpgradePlan(elementsToAdd);
             FileUpgrader fileUpgrader = new FileUpgrader(upgradePlan, configFile);
-
-
-            //upgrader.AddEntry(elementsToAdd);
-            //upgrader.Apply();
 
             ConfigurationFile upgradedConfig = fileUpgrader.Upgrade();
             upgradedConfig.Document.Element("AddedNumber").Value.Should().Be("3");
