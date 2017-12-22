@@ -1,13 +1,12 @@
 ﻿namespace UConfig.Test.IntegrationTest
 {
     using System;
+    using System.IO;
     using System.Xml.Linq;
     using Core;
     using Examples;
     using FluentAssertions;
     using Microsoft.Extensions.Configuration;
-    using Microsoft.Extensions.Configuration.Xml;
-    using Microsoft.Extensions.FileProviders;
     using Xunit;
 
     public class UpgradeXmlTest
@@ -15,12 +14,10 @@
         [Fact]
         public void UpgradeXml()
         {
-            // load an xml config
             var xmlVersion1Path = @"Examples\Xml\Config_v1.xml";
             var xmlVersion2Path = @"Examples\Xml\Config_v2.xml";
             XElement configV1 = XElement.Load(xmlVersion1Path);
 
-            // define upgrade method in configuration class
             Upgrader upgrader = new Upgrader(configV1);
 
             // apply upgrade method from config
@@ -33,13 +30,14 @@
             // load config via .net core configuration
             var updatedConfig = GetConfig<ExampleConfigV2>(updatedConfigPath);
             var expected = GetConfig<ExampleConfigV2>(xmlVersion2Path);
-            
+
             updatedConfig.ShouldBeEquivalentTo(expected);
         }
 
+
         private string SaveAsTemporaryConfig(XElement updatedConfig)
         {
-            string tempConfigPath = System.IO.Path.GetTempPath() + Guid.NewGuid() + ".xml";
+            string tempConfigPath = Path.GetTempPath() + Guid.NewGuid() + ".xml";
             updatedConfig.Save(tempConfigPath);
             return tempConfigPath;
         }
@@ -51,9 +49,5 @@
             IConfigurationRoot configurationRootUpdated = builderUpdated.Build();
             return configurationRootUpdated.Get<T>();
         }
-
-     
-        
     }
-
 }
