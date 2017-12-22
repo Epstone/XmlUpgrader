@@ -21,10 +21,7 @@
         {
             var treeToUpgrade = new XElement(this.configFile.Document);
 
-            //foreach (var entry in upgradePlan.AddedValues)
-            //{
-                expandoToXML(upgradePlan.AddedValues, "", treeToUpgrade);
-            //}
+            extendXml(upgradePlan.AddedValues, "", treeToUpgrade);
 
             return new ConfigurationFile()
             {
@@ -33,7 +30,7 @@
             };
         }
 
-        private XElement expandoToXML(dynamic node, string nodeName, XElement treeToUpgrade)
+        private XElement extendXml(dynamic node, string nodeName, XElement treeToUpgrade)
         {
             XElement xmlNode;
             if (string.IsNullOrEmpty(nodeName))
@@ -42,27 +39,30 @@
             }
             else
             {
-                xmlNode = new XElement(nodeName);
+                xmlNode = treeToUpgrade.Element(nodeName); // try to grab existing node
+            }
+
+            if (xmlNode == null)
+            {
+                xmlNode = new XElement(nodeName); // node not yet existing, create new
+                treeToUpgrade.Add(xmlNode);
             }
 
 
             foreach (var property in (IDictionary<string, object>)node)
             {
-                if (property.Value.GetType() == typeof(ExpandoObject))
-
+                if (IsExpandoObject(property))
                 {
-                    xmlNode.Add(expandoToXML(property.Value, property.Key, xmlNode));
+                    extendXml(property.Value, property.Key, xmlNode);
                 }
 
-                else if (property.Value.GetType() == typeof(List<dynamic>))
-
+                else if (IsDynamicList(property))
                 {
                     foreach (var element in (List<dynamic>)property.Value)
                     {
-                        xmlNode.Add(expandoToXML(element, property.Key, xmlNode));
+                        xmlNode.Add(extendXml(element, property.Key, xmlNode));
                     }
                 }
-
                 else
                 {
                     xmlNode.Add(new XElement(property.Key, property.Value));
@@ -70,6 +70,16 @@
             }
 
             return xmlNode;
+        }
+
+        private static bool IsDynamicList(KeyValuePair<string, object> property)
+        {
+            return property.Value.GetType() == typeof(List<dynamic>);
+        }
+
+        private static bool IsExpandoObject(KeyValuePair<string, object> property)
+        {
+            return property.Value.GetType() == typeof(ExpandoObject);
         }
     }
 }

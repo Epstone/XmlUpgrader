@@ -5,8 +5,6 @@
 
     internal class ConfigurationFile
     {
-        private string xmlPath;
-
         public int Version
         {
             get;
@@ -26,11 +24,20 @@
 
         public static ConfigurationFile LoadXml(string xmlPath)
         {
+            return LoadFromXmlElement(XElement.Load(xmlPath));
+        }
+
+        private static ConfigurationFile LoadFromXmlElement(XElement xml)
+        {
             var result = new ConfigurationFile();
-            result.xmlPath = xmlPath;
-            result.Document = XElement.Load(xmlPath);
+            result.Document = xml;
             result.Version = int.Parse(result.Document.Attribute("version").Value);
             return result;
+        }
+
+        public static ConfigurationFile FromXElement(XElement xml)
+        {
+            return LoadFromXmlElement(xml);
         }
     }
 
