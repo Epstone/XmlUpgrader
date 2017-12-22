@@ -13,25 +13,23 @@
     {
         private static readonly string ConfigurationXmlDirectory = @"Examples\Xml\";
 
-        [Fact]
+        [Fact(Skip = "just demo")]
         public void UpgradeXml()
         {
-            var xmlVersion1Path = $@"{ConfigurationXmlDirectory}Config_v1.xml";
-            var xmlVersion2Path = @"Examples\Xml\Config_v2.xml";
-            XElement configV1 = XElement.Load(xmlVersion1Path);
-
-            Upgrader upgrader = new Upgrader(configV1);
+            var xmlToUpgrade = $@"{ConfigurationXmlDirectory}Config_v1.xml";
+            var xmlUpgradeReference = @"Examples\Xml\Config_v2.xml";
+            
+            Upgrader upgrader = new Upgrader();
 
             // apply upgrade method from config
             upgrader.Register<ExampleConfigV2>();
 
             // verify output xml compatible with reference xml
-            XElement v2 = upgrader.Apply();
-            string updatedConfigPath = SaveAsTemporaryConfig(v2);
+            upgrader.UpgradeXml(xmlToUpgrade);
 
             // load config via .net core configuration
-            var updatedConfig = GetConfig<ExampleConfigV2>(updatedConfigPath);
-            var expected = GetConfig<ExampleConfigV2>(xmlVersion2Path);
+            var updatedConfig = GetConfig<ExampleConfigV2>(xmlToUpgrade);
+            var expected = GetConfig<ExampleConfigV2>(xmlUpgradeReference);
 
             updatedConfig.ShouldBeEquivalentTo(expected);
         }

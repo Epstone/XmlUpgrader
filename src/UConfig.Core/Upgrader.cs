@@ -2,7 +2,6 @@
 {
     using System;
     using System.Collections.Generic;
-    using System.Dynamic;
     using System.IO;
     using System.Linq;
     using System.Reflection;
@@ -12,85 +11,54 @@
     {
         private XElement tree;
 
-        private readonly List<dynamic> mapping;
-
-        public Upgrader(XElement tree)
-        {
-            this.tree = tree;
-            mapping = new List<dynamic>();
-        }
-
-        public Upgrader()
-        {
-        }
-
-
-        public XElement Apply()
-        {
-            foreach (Type registration in Registrations)
-            {
-                IUpgradableConfig instance = (IUpgradableConfig)Activator.CreateInstance(registration);
-                mapping.Add(instance.GetUpgradeMap());
-            }
-
-            foreach (var entry in mapping)
-            {
-                expandoToXML(entry, "");
-            }
-
-            return tree;
-        }
-
-        internal ConfigurationFile ApplyForOne(UpgradePlan upgradePlan)
-        {
-            var currentTree = new XElement(tree);
-            this.tree = currentTree;
-            foreach (var entry in mapping)
-            {
-                expandoToXML(entry, "");
-            }
-
-            return new ConfigurationFile()
-            {
-                Version = upgradePlan.UpgradeToVersion,
-                Document = currentTree
-            };
-        }
+        private readonly List<UpgradePlan> upgradePlans = new List<UpgradePlan>();
+        private string[] xmlFilePaths;
+        private List<ConfigurationFile> configFiles = new List<ConfigurationFile>();
 
         public void AddEntry(dynamic xpath)
         {
-            mapping.Add(xpath);
+            upgradePlans.Add(xpath);
         }
 
         public void Register<T>() where T : IUpgradableConfig, new()
         {
-            Registrations.Add(typeof(T));
+            ReadUpgradPlan(new T());
+        }
+
+        private void ReadUpgradPlan(IUpgradableConfig upgradableConfig)
+        {
+            UpgradePlan upgradePlan = upgradableConfig.GetUpgradePlan();
+            upgradePlan.UpgradeToVersion = upgradableConfig.Version;
+            upgradePlans.Add(upgradePlan);
         }
 
         public void RegisterAll(Assembly assembly)
         {
             var types = assembly.GetTypes().Where(t => typeof(IUpgradableConfig).IsAssignableFrom(t));
             Registrations.AddRange(types);
+
+            foreach (Type registration in Registrations)
+            {
+                this.ReadUpgradPlan((IUpgradableConfig)Activator.CreateInstance(registration));
+            }
         }
 
         public void AddXmlConfigurationDir(string directory)
         {
             XmlConfigurationDirectory = directory;
+            this.xmlFilePaths = Directory.GetFiles(XmlConfigurationDirectory, "*.xml");
+
+            if (xmlFilePaths.Length == 0)
+            {
+                throw new InvalidOperationException("no xml configuration files found");
+            }
+            this.configFiles.AddRange(xmlFilePaths.Select(ConfigurationFile.LoadXml));
         }
 
         public void Verify()
         {
-            // create dictionary of Xml configuration files (version -> xml)
-            var xmlFiles = Directory.GetFiles(XmlConfigurationDirectory, "*.xml");
 
-
-            if (xmlFiles.Length == 0)
-            {
-                throw new InvalidOperationException("no xml configuration files found");
-            }
-            IEnumerable<ConfigurationFile> configFiles = LoadAsConfigFiles(xmlFiles);
-
-            if (xmlFiles.Length == 1)
+            if (xmlFilePaths.Length == 1)
             {
                 throw new InvalidOperationException("just one configuration file found, nothing to upgrade.");
             }
@@ -102,67 +70,31 @@
             {
                 var configurationFile = configurationFiles[i];
                 // todo no version gaps allowed
-                UpgradePlan mapping = this.mapping.FirstOrDefault(m => m.Version == configurationFile.Version + 1);
-                if (mapping == null)
+                UpgradePlan upgradePlan = this.upgradePlans.FirstOrDefault(m => m.UpgradeToVersion == configurationFile.Version + 1);
+                if (upgradePlan == null)
                 {
                     throw new InvalidOperationException($"No upgrade script for xml version {configurationFile.Version} found.");
                 }
 
-                this.tree = configurationFile.Document; // todo do not touch original content
-                ConfigurationFile updatedConfig = ApplyForOne(mapping);
+                FileUpgrader upgrader = new FileUpgrader(upgradePlan, configurationFile);
+                ConfigurationFile upgradeConfig = upgrader.Upgrade();
 
                 // execute the update and compare with reference version
-                configurationFiles[i + 1].VerifyEqualTo(updatedConfig);
+                upgradeConfig.VerifyEqualTo(configurationFiles[i + 1]);
             }
-            
         }
 
         public List<Type> Registrations { get; set; } = new List<Type>();
 
         public string XmlConfigurationDirectory { get; set; }
 
-        private XElement expandoToXML(dynamic node, string nodeName)
+        public void UpgradeXml(string xmlToUpgrade)
         {
-            XElement xmlNode;
-            if (string.IsNullOrEmpty(nodeName))
+            var configToUpgrade = ConfigurationFile.LoadXml(xmlToUpgrade);
+            foreach (UpgradePlan upgradePlan in upgradePlans.OrderBy(x => x.UpgradeToVersion))
             {
-                xmlNode = tree;
+                var upgrader = new FileUpgrader(upgradePlan, configToUpgrade);
             }
-            else
-            {
-                xmlNode = new XElement(nodeName);
-            }
-
-
-            foreach (var property in (IDictionary<string, object>)node)
-            {
-                if (property.Value.GetType() == typeof(ExpandoObject))
-
-                {
-                    xmlNode.Add(expandoToXML(property.Value, property.Key));
-                }
-
-                else if (property.Value.GetType() == typeof(List<dynamic>))
-
-                {
-                    foreach (var element in (List<dynamic>)property.Value)
-                    {
-                        xmlNode.Add(expandoToXML(element, property.Key));
-                    }
-                }
-
-                else
-                {
-                    xmlNode.Add(new XElement(property.Key, property.Value));
-                }
-            }
-
-            return xmlNode;
-        }
-
-        private IEnumerable<ConfigurationFile> LoadAsConfigFiles(string[] xmlFiles)
-        {
-            return xmlFiles.Select(x => new ConfigurationFile(x));
         }
     }
 }

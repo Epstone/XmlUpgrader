@@ -2,6 +2,8 @@
 {
     public interface IUpgradableConfig
     {
-        dynamic GetUpgradeMap();
+        UpgradePlan GetUpgradePlan();
+
+        int Version { get; }
     }
 }

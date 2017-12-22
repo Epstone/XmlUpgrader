@@ -7,24 +7,31 @@
     {
         private string xmlPath;
 
-        public ConfigurationFile()
+        public int Version
         {
+            get;
+            set;
         }
 
-        public ConfigurationFile(string xmlPath)
+        public XElement Document
         {
-            this.xmlPath = xmlPath;
-            Document = XElement.Load(xmlPath);
-            Version = int.Parse(Document.Attribute("version").Value);
+            get;
+            set;
         }
-
-        public int Version { get; set; }
-
-        public XElement Document { get; set; }
 
         public void VerifyEqualTo(ConfigurationFile updatedConfig)
         {
-            XmlUtils.DeepEqualsWithNormalization(this.Document.Document, updatedConfig.Document.Document, null); //todo remove null
+            XmlUtils.DeepEqualsWithNormalization(new XDocument(this.Document), new XDocument(updatedConfig.Document), null); //todo remove null
+        }
+
+        public static ConfigurationFile LoadXml(string xmlPath)
+        {
+            var result = new ConfigurationFile();
+            result.xmlPath = xmlPath;
+            result.Document = XElement.Load(xmlPath);
+            result.Version = int.Parse(result.Document.Attribute("version").Value);
+            return result;
         }
     }
+
 }
