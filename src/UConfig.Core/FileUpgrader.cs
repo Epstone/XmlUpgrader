@@ -29,6 +29,7 @@
             {
                 this.FindXmlNode(upgradePlan.RenamedSettings, "", workingTree);
             }
+
             if (upgradePlan.AddedSettings != null)
             {
                 extendXml(upgradePlan.AddedSettings, "", workingTree);
@@ -74,9 +75,9 @@
                     oldNode.Name = property.Key;
                     xmlNode.Add(oldNode);
                 }
-                else if (property.Value is ExpandoObject dynamicValue)
+                else if (IsExpandoObject(property.Value))
                 {
-                    FindXmlNode(dynamicValue, property.Key, xmlNode);
+                    FindXmlNode(property.Value, property.Key, xmlNode);
                 }
                 else
                 {
@@ -107,17 +108,9 @@
 
             foreach (KeyValuePair<string, object> property in (IDictionary<string, object>)node)
             {
-                if (IsExpandoObject(property))
+                if (IsExpandoObject(property.Value))
                 {
                     extendXml(property.Value, property.Key, xmlNode);
-                }
-
-                else if (IsDynamicList(property))
-                {
-                    foreach (dynamic element in (List<dynamic>)property.Value)
-                    {
-                        xmlNode.Add(extendXml(element, property.Key, xmlNode));
-                    }
                 }
                 else
                 {
@@ -133,9 +126,9 @@
             return property.Value.GetType() == typeof(List<dynamic>);
         }
 
-        private static bool IsExpandoObject(KeyValuePair<string, object> property)
+        private static bool IsExpandoObject(object propertyValue)
         {
-            return property.Value.GetType() == typeof(ExpandoObject);
+            return propertyValue.GetType() == typeof(ExpandoObject);
         }
     }
 }

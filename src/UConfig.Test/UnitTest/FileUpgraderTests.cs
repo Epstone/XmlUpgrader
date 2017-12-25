@@ -143,7 +143,6 @@
                 Should().HaveElement("MovedSetting").Which.Value.Should().Be("test");
         }
 
-        // todo rename setting
         // todo remove setting
         // todo load xml without version has flag set
         // todo upgrade for two versions
