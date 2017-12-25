@@ -11,9 +11,9 @@
 
         public UpgradePlan GetUpgradePlan()
         {
-            var map = new RenameMap()
-                .RenameFrom(nameof(ExampleConfigV1.TestInteger)).To(nameof(RenamedInteger));
             return new UpgradePlan();
+
+            // todo use in test
         }
 
         public int Version => 2;

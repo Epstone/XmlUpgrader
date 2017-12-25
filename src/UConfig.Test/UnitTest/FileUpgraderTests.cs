@@ -55,7 +55,7 @@
             elementsToAdd.AddedNumber = "3";
 
             var upgradePlan = new UpgradePlan()
-            .AddSettingsToAdd(elementsToAdd)
+            .AddElements(elementsToAdd)
             .SetVersion(2);
 
             var fileUpgrader = new FileUpgrader(upgradePlan, configFile);
@@ -76,7 +76,7 @@
 
             var upgradePlan = new UpgradePlan()
             .SetVersion(2)
-            .AddSettingsToAdd(elementsToAdd);
+            .AddElements(elementsToAdd);
 
             var fileUpgrader = new FileUpgrader(upgradePlan, configFile);
             ConfigurationFile upgradedConfig = fileUpgrader.Upgrade();
@@ -94,7 +94,7 @@
 
             var upgradePlan = new UpgradePlan()
                                     .SetVersion(2)
-                                    .AddSettingsToAdd(elementsToAdd);
+                                    .AddElements(elementsToAdd);
 
             var fileUpgrader = new FileUpgrader(upgradePlan, configFile);
             ConfigurationFile upgradedConfig = fileUpgrader.Upgrade();
@@ -108,11 +108,19 @@
         {
             ConfigurationFile configFile = ConfigurationFile.FromXElement(DefaultXmlVersionOne);
 
-            var upgradePlan = new ExampleRenamingConfigV2().GetUpgradePlan();
+            //var map = new RenameMap()
+            dynamic renameMap = new ExpandoObject();    
+            renameMap.ExampleStringRenamed = "/ExampleString";
+
+            var upgradePlan = new UpgradePlan()
+                .SetVersion(2)
+                .RenameElements(renameMap);
 
             var fileUpgrader = new FileUpgrader(upgradePlan, configFile);
             ConfigurationFile upgradedConfig = fileUpgrader.Upgrade();
-            upgradedConfig.Document.Element("ExampleStructure").Element("DeepSettingOne").Value.Should().Be("One");
+            upgradedConfig.Document.Element("ExampleString").Should().BeNull();
+            upgradedConfig.Document.Element("ExampleStringRenamed").Value.Should().Be("test");
+
         }
 
         // todo rename setting

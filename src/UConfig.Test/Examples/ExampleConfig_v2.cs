@@ -16,7 +16,7 @@
             dynamic addedSettings = new ExpandoObject();
             addedSettings.AddedValue = "I'm an added value!";
             var upgradePlan = new UpgradePlan();
-            upgradePlan.AddedSettings(addedSettings);
+            upgradePlan.AddElements(addedSettings);
             return upgradePlan;
         }
 
