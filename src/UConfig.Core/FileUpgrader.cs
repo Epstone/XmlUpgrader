@@ -27,7 +27,8 @@
 
             if (upgradePlan.RenamedSettings != null)
             {
-                this.FindXmlNode(upgradePlan.RenamedSettings, "", workingTree);
+                RenameStrategy renameStrategy = new RenameStrategy(workingTree);
+                renameStrategy.FindXmlNode(upgradePlan.RenamedSettings, "");
             }
 
             if (upgradePlan.AddedSettings != null)
@@ -78,10 +79,6 @@
                 else if (IsExpandoObject(property.Value))
                 {
                     FindXmlNode(property.Value, property.Key, xmlNode);
-                }
-                else
-                {
-                    xmlNode = FindXmlNode(property.Value, property.Key, xmlNode);
                 }
             }
 
