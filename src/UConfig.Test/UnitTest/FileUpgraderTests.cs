@@ -120,7 +120,27 @@
             ConfigurationFile upgradedConfig = fileUpgrader.Upgrade();
             upgradedConfig.Document.Element("ExampleString").Should().BeNull();
             upgradedConfig.Document.Element("ExampleStringRenamed").Value.Should().Be("test");
+        }
 
+        [Fact]
+        public void MoveElement()
+        {
+            ConfigurationFile configFile = ConfigurationFile.FromXElement(DefaultXmlVersionOne);
+
+            //var map = new RenameMap()
+            dynamic renameMap = new ExpandoObject();
+            renameMap.TestStructure = new ExpandoObject();
+            renameMap.TestStructure.MovedSetting = "/ExampleString";
+
+            var upgradePlan = new UpgradePlan()
+                .SetVersion(2)
+                .RenameElements(renameMap);
+
+            var fileUpgrader = new FileUpgrader(upgradePlan, configFile);
+            ConfigurationFile upgradedConfig = fileUpgrader.Upgrade();
+            upgradedConfig.Document. Element("ExampleString").Should().BeNull();
+            upgradedConfig.Document.Should().HaveElement("TestStructure").Which.
+                Should().HaveElement("MovedSetting").Which.Value.Should().Be("test");
         }
 
         // todo rename setting
