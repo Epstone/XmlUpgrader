@@ -1,11 +1,9 @@
 ﻿namespace UConfig.Core
 {
-    using System;
     using System.Collections.Generic;
     using System.Dynamic;
     using System.Linq;
     using System.Xml.Linq;
-    using System.Xml.XPath;
 
     internal class FileUpgrader
     {
@@ -34,6 +32,7 @@
             if (upgradePlan.AddedSettings != null)
             {
                 extendXml(upgradePlan.AddedSettings, "", workingTree);
+                ExtensionStrategy strategy = new ExtensionStrategy(workingTree, upgradePlan.AddedSettings);
             }
 
             return new ConfigurationFile
@@ -41,48 +40,6 @@
                 Document = workingTree,
                 Version = upgradePlan.UpgradeToVersion
             };
-        }
-
-        internal XElement FindXmlNode(dynamic nodeToFind, string nodeName, XElement treeToUpgrade)
-        {
-            XElement xmlNode;
-            if (string.IsNullOrEmpty(nodeName))
-            {
-                xmlNode = treeToUpgrade;
-            }
-            else
-            {
-                xmlNode = treeToUpgrade.Element(nodeName); // try to grab existing node
-            }
-
-            if (xmlNode == null)
-            {
-                xmlNode = new XElement(nodeName); // node not yet existing, create new
-                treeToUpgrade.Add(xmlNode);
-            }
-
-            if (xmlNode == null)
-            {
-                throw new InvalidOperationException($"cannot find node with name {nodeToFind}");
-            }
-
-            foreach (KeyValuePair<string, object> property in (IDictionary<string, object>)nodeToFind)
-            {
-                if (property.Value is string valueString)
-                {
-                    XElement oldNode = this.workingTree.XPathSelectElement(valueString);
-                    // find old node and move and rename
-                    oldNode.Remove();
-                    oldNode.Name = property.Key;
-                    xmlNode.Add(oldNode);
-                }
-                else if (IsExpandoObject(property.Value))
-                {
-                    FindXmlNode(property.Value, property.Key, xmlNode);
-                }
-            }
-
-            return xmlNode;
         }
 
         private XElement extendXml(dynamic node, string nodeName, XElement treeToUpgrade)

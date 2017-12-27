@@ -5,15 +5,11 @@
     using System.Xml.Linq;
     using System.Xml.XPath;
 
-    internal class RenameStrategy
+    internal class RenameStrategy : StrategyBase
     {
-        private readonly dynamic renamingTree;
-        private readonly XElement workingTree;
-
-        public RenameStrategy(XElement workingTree, dynamic renamingTree)
+       
+        public RenameStrategy(XElement workingTree, dynamic renamingTree):base(workingTree, (object)renamingTree)
         {
-            this.workingTree = workingTree;
-            this.renamingTree = renamingTree;
         }
 
         public void Execute()
@@ -48,20 +44,6 @@
             moveTarget.Add(oldNode);
         }
 
-        private XElement GetOrCreateNode(string currentNodeName, XElement currentNode)
-        {
-            XElement xmlNode = currentNode;
-            if (!string.IsNullOrEmpty(currentNodeName))
-            {
-                xmlNode = currentNode.Element(currentNodeName); 
-            }
-
-            if (xmlNode == null)
-            {
-                xmlNode = new XElement(currentNodeName); 
-                currentNode.Add(xmlNode);
-            }
-            return xmlNode;
-        }
+        
     }
 }
