@@ -1,16 +1,37 @@
-﻿using System.Xml.Linq;
-
-namespace UConfig.Core
+﻿namespace UConfig.Core
 {
-    internal class ExtensionStrategy
-    {
-        private XElement workingTree;
-        private dynamic addedSettings;
+    using System.Collections.Generic;
+    using System.Dynamic;
+    using System.Xml.Linq;
 
-        public ExtensionStrategy(XElement workingTree, dynamic addedSettings)
+    internal class ExtensionStrategy : StrategyBase
+    {
+        public ExtensionStrategy(XElement workingTree, dynamic addedSettings) : base(workingTree, (object)addedSettings)
         {
-            this.workingTree = workingTree;
-            this.addedSettings = addedSettings;
+        }
+
+        public void Execute()
+        {
+            this.TraverseTree(settingsTree, string.Empty, workingTree);
+        }
+
+        internal XElement TraverseTree(dynamic renamingElement, string currentNodeName, XElement currentNode)
+        {
+            XElement xmlNode = GetOrCreateNode(currentNodeName, currentNode);
+
+            foreach (var property in (IDictionary<string, object>)renamingElement)
+            {
+                if (property.Value is ExpandoObject)
+                {
+                    TraverseTree(property.Value, property.Key, xmlNode);
+                }
+                else
+                {
+                    xmlNode.Add(new XElement(property.Key, property.Value));
+                }
+            }
+
+            return xmlNode;
         }
     }
 }

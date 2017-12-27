@@ -4,13 +4,13 @@
 
     public abstract class StrategyBase
     {
-        protected dynamic renamingTree;
+        protected dynamic settingsTree;
         protected XElement workingTree;
 
-        public StrategyBase(XElement workingTree, dynamic renamingTree)
+        public StrategyBase(XElement workingTree, dynamic settingsTree)
         {
             this.workingTree = workingTree;
-            this.renamingTree = renamingTree;
+            this.settingsTree = settingsTree;
         }
 
         protected XElement GetOrCreateNode(string currentNodeName, XElement currentNode)

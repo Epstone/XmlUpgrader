@@ -31,8 +31,8 @@
 
             if (upgradePlan.AddedSettings != null)
             {
-                extendXml(upgradePlan.AddedSettings, "", workingTree);
                 ExtensionStrategy strategy = new ExtensionStrategy(workingTree, upgradePlan.AddedSettings);
+                strategy.Execute();
             }
 
             return new ConfigurationFile

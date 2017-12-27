@@ -14,7 +14,7 @@
 
         public void Execute()
         {
-            this.TraverseTree(renamingTree, string.Empty, workingTree);
+            this.TraverseTree(settingsTree, string.Empty, workingTree);
         }
 
         internal XElement TraverseTree(dynamic renamingElement, string currentNodeName, XElement currentNode)
