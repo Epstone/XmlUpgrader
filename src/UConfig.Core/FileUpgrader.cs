@@ -25,9 +25,9 @@
         {
             workingTree = new XElement(configFile.Document);
 
-            if (upgradePlan.RenamedSettings != null)
+            if (upgradePlan.RenamingSettings != null)
             {
-                RenameStrategy renameStrategy = new RenameStrategy(workingTree, upgradePlan.RenamedSettings);
+                RenameStrategy renameStrategy = new RenameStrategy(workingTree, upgradePlan.RenamingSettings);
                 renameStrategy.Execute();
             }
 

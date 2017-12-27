@@ -12,11 +12,11 @@
 
         public UpgradePlan RenameElements(dynamic elementsToRename)
         {
-            this.RenamedSettings = elementsToRename;
+            this.RenamingSettings = elementsToRename;
             return this;
         }
 
-        internal dynamic RenamedSettings { get; set; }
+        internal dynamic RenamingSettings { get; set; }
 
         internal dynamic AddedSettings { get; set; } 
         public int UpgradeToVersion { get; internal set; }
