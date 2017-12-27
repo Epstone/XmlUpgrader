@@ -27,8 +27,8 @@
 
             if (upgradePlan.RenamedSettings != null)
             {
-                RenameStrategy renameStrategy = new RenameStrategy(workingTree);
-                renameStrategy.FindXmlNode(upgradePlan.RenamedSettings, "");
+                RenameStrategy renameStrategy = new RenameStrategy(workingTree, upgradePlan.RenamedSettings);
+                renameStrategy.Execute();
             }
 
             if (upgradePlan.AddedSettings != null)
