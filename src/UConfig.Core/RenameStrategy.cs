@@ -1,6 +1,5 @@
 ﻿namespace UConfig.Core
 {
-    using System;
     using System.Collections.Generic;
     using System.Dynamic;
     using System.Xml.Linq;
@@ -8,33 +7,33 @@
 
     internal class RenameStrategy
     {
+        private readonly dynamic renamingTree;
         private readonly XElement workingTree;
-        private readonly dynamic upgradeSettings;
 
-        public RenameStrategy(XElement workingTree, dynamic upgradeSettings)
+        public RenameStrategy(XElement workingTree, dynamic renamingTree)
         {
             this.workingTree = workingTree;
-            this.upgradeSettings = upgradeSettings;
+            this.renamingTree = renamingTree;
         }
 
         public void Execute()
         {
-            this.MoveNode(this.upgradeSettings, string.Empty, workingTree);
+            this.TraverseTree(renamingTree, string.Empty, workingTree);
         }
 
-        internal XElement MoveNode(dynamic nodeToFind, string currentNodeName, XElement currentNode)
+        internal XElement TraverseTree(dynamic renamingElement, string currentNodeName, XElement currentNode)
         {
             XElement xmlNode = GetOrCreateNode(currentNodeName, currentNode);
 
-            foreach (KeyValuePair<string, object> property in (IDictionary<string, object>)nodeToFind)
+            foreach (var property in (IDictionary<string, object>) renamingElement)
             {
                 if (property.Value is string xPath)
                 {
-                    MoveNodeByXpath(xPath, newName: property.Key, moveTarget: xmlNode);
+                    MoveNodeByXpath(xPath, property.Key, xmlNode);
                 }
                 else if (property.Value is ExpandoObject)
                 {
-                    MoveNode(property.Value, property.Key, xmlNode);
+                    TraverseTree(property.Value, property.Key, xmlNode);
                 }
             }
 
@@ -43,7 +42,7 @@
 
         private void MoveNodeByXpath(string xPath, string newName, XElement moveTarget)
         {
-            XElement oldNode = this.workingTree.XPathSelectElement(xPath);
+            XElement oldNode = workingTree.XPathSelectElement(xPath);
             oldNode.Remove();
             oldNode.Name = newName;
             moveTarget.Add(oldNode);
@@ -51,19 +50,15 @@
 
         private XElement GetOrCreateNode(string currentNodeName, XElement currentNode)
         {
-            XElement xmlNode;
-            if (string.IsNullOrEmpty(currentNodeName))
+            XElement xmlNode = currentNode;
+            if (!string.IsNullOrEmpty(currentNodeName))
             {
-                xmlNode = this.workingTree;
-            }
-            else
-            {
-                xmlNode = currentNode.Element(currentNodeName); // try to grab existing node
+                xmlNode = currentNode.Element(currentNodeName); 
             }
 
             if (xmlNode == null)
             {
-                xmlNode = new XElement(currentNodeName); // node not yet existing, create new
+                xmlNode = new XElement(currentNodeName); 
                 currentNode.Add(xmlNode);
             }
             return xmlNode;
