@@ -5,13 +5,11 @@
     using System.IO;
     using System.Linq;
     using System.Reflection;
-    using System.Xml.Linq;
 
     public class Upgrader
     {
         private readonly List<UpgradePlan> upgradePlans = new List<UpgradePlan>();
         private readonly List<ConfigurationFile> configFiles = new List<ConfigurationFile>();
-        private XElement tree;
         private string[] xmlFilePaths;
 
         public void AddEntry(dynamic xpath)

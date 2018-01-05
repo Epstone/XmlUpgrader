@@ -1,5 +1,6 @@
 ﻿namespace UConfig.Test.UnitTest
 {
+    using System.Collections.Generic;
     using System.Dynamic;
     using System.Linq;
     using System.Linq.Expressions;
@@ -127,7 +128,6 @@
         {
             ConfigurationFile configFile = ConfigurationFile.FromXElement(DefaultXmlVersionOne);
 
-            //var map = new RenameMap()
             dynamic renameMap = new ExpandoObject();
             renameMap.TestStructure = new ExpandoObject();
             renameMap.TestStructure.MovedSetting = "/ExampleString";
@@ -143,7 +143,25 @@
                 Should().HaveElement("MovedSetting").Which.Value.Should().Be("test");
         }
 
-        // todo remove setting
+        [Fact]
+        public void RemoveElement()
+        {
+            ConfigurationFile configFile = ConfigurationFile.FromXElement(DefaultXmlVersionOne);
+
+            var removeElements = new List<string>();
+
+            removeElements.Add("/ExampleString");
+
+            var upgradePlan = new UpgradePlan()
+                .SetVersion(2)
+                .RemoveElements(removeElements);
+
+            var fileUpgrader = new FileUpgrader(upgradePlan, configFile);
+            ConfigurationFile upgradedConfig = fileUpgrader.Upgrade();
+            upgradedConfig.Document.Should().NotBeNull();
+            upgradedConfig.Document.Element("ExampleString").Should().BeNull();
+        }
+
         // todo load xml without version has flag set
         // todo upgrade for two versions
         // todo too high upgrade version throws exception

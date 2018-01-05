@@ -1,29 +1,38 @@
 ﻿namespace UConfig.Core
 {
-    using System.Dynamic;
+    using System.Collections.Generic;
 
     public class UpgradePlan
     {
+        internal dynamic RenamingSettings { get; set; }
+
+        internal dynamic AddedSettings { get; set; }
+
+        public int UpgradeToVersion { get; internal set; }
+
+        public List<string> RemovedElements { get; set; } = new List<string>();
+
         public UpgradePlan AddElements(dynamic elementsToAdd)
         {
-            this.AddedSettings = elementsToAdd;
+            AddedSettings = elementsToAdd;
             return this;
         }
 
         public UpgradePlan RenameElements(dynamic elementsToRename)
         {
-            this.RenamingSettings = elementsToRename;
+            RenamingSettings = elementsToRename;
             return this;
         }
 
-        internal dynamic RenamingSettings { get; set; }
-
-        internal dynamic AddedSettings { get; set; } 
-        public int UpgradeToVersion { get; internal set; }
-
         public UpgradePlan SetVersion(int version)
         {
-            this.UpgradeToVersion = version;
+            UpgradeToVersion = version;
+            return this;
+        }
+
+        public UpgradePlan RemoveElements(IEnumerable<string> removeElements)
+        {
+            RemovedElements.AddRange(removeElements);
             return this;
         }
     }
