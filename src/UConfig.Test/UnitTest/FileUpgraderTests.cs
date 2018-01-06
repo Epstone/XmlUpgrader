@@ -1,5 +1,6 @@
 ﻿namespace UConfig.Test.UnitTest
 {
+    using System;
     using System.Collections.Generic;
     using System.Dynamic;
     using System.Linq;
@@ -204,6 +205,19 @@
             var upgrader = new FileUpgrader(plan, configFile);
             ConfigurationFile upgradedConfig = upgrader.Upgrade();
             upgradedConfig.Version.Should().Be(3);
+        }
+
+        [Fact]
+        public void JustMessingAroundWithVersionCode()
+        {
+            var oneoh = new Version("1.0");
+            var oneohohoh = new Version("1.0.0.0");
+            var oneohohone = new Version("1.0.0.1");
+            (oneoh == oneohohoh).Should().Be(false);
+            (oneoh < oneohohoh).Should().Be(true);
+            (oneoh > oneohohoh).Should().Be(false);
+            oneohohone.Should().BeGreaterThan(oneoh);
+            oneohohone.Should().BeGreaterThan(oneohohoh);
         }
 
         // todo allow versions with major.minor.revision.build number
