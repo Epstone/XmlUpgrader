@@ -219,9 +219,5 @@
             oneohohone.Should().BeGreaterThan(oneoh);
             oneohohone.Should().BeGreaterThan(oneohohoh);
         }
-
-        // todo allow versions with major.minor.revision.build number
-        // todo upgrade for two versions
-        // todo too high upgrade version throws exception
     }
 }

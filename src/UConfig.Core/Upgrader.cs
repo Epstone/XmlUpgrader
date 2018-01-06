@@ -59,7 +59,7 @@
             {
                 ConfigurationFile configurationFile = configurationFiles[i];
                 ConfigurationFile nextConfigurationFile = configurationFiles[i + 1];
-                // todo no version gaps allowed
+            
                 UpgradePlan upgradePlan = upgradePlans.FirstOrDefault(m => m.UpgradeToVersion == nextConfigurationFile.Version);
                 if (upgradePlan == null)
                 {
