@@ -1,6 +1,6 @@
 ﻿<?xml version="1.0" encoding="utf-8"?>
 
-<configuration version="1">
+<configuration version="1.0">
   <TestString>HelloWorld</TestString>
   <TestInteger>123</TestInteger>
 </configuration>

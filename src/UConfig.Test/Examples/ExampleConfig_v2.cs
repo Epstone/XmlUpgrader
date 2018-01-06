@@ -1,5 +1,6 @@
 ﻿namespace UConfig.Test.Examples
 {
+    using System;
     using System.Dynamic;
     using Core;
 
@@ -20,6 +21,6 @@
             return upgradePlan;
         }
 
-        public int Version => 2;
+        public Version Version => new Version(2, 0);
     }
 }

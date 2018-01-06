@@ -29,7 +29,7 @@
 
             foreach (Type registration in Registrations)
             {
-                ReadUpgradPlan((IUpgradableConfig) Activator.CreateInstance(registration));
+                ReadUpgradPlan((IUpgradableConfig)Activator.CreateInstance(registration));
             }
         }
 
@@ -58,8 +58,9 @@
             for (var i = 0; i < configurationFiles.Length - 1; i++) // do not upgrade to a version which is not existing yet
             {
                 ConfigurationFile configurationFile = configurationFiles[i];
+                ConfigurationFile nextConfigurationFile = configurationFiles[i + 1];
                 // todo no version gaps allowed
-                UpgradePlan upgradePlan = upgradePlans.FirstOrDefault(m => m.UpgradeToVersion == configurationFile.Version + 1);
+                UpgradePlan upgradePlan = upgradePlans.FirstOrDefault(m => m.UpgradeToVersion == nextConfigurationFile.Version);
                 if (upgradePlan == null)
                 {
                     throw new InvalidOperationException($"No upgrade script for xml version {configurationFile.Version} found.");
@@ -69,7 +70,7 @@
                 ConfigurationFile upgradeConfig = upgrader.Upgrade();
 
                 // execute the update and compare with reference version
-                upgradeConfig.VerifyEqualTo(configurationFiles[i + 1]);
+                upgradeConfig.VerifyEqualTo(nextConfigurationFile);
             }
         }
 

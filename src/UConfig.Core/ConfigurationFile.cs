@@ -1,5 +1,6 @@
 ﻿namespace UConfig.Core
 {
+    using System;
     using System.Xml.Linq;
 
     internal class ConfigurationFile
@@ -19,7 +20,7 @@
             return LoadFromXmlElement(xml);
         }
 
-        public int Version { get; set; }
+        public Version Version { get; set; }
 
         public XElement Document { get; set; }
 
@@ -29,8 +30,8 @@
             result.Document = xml;
             XAttribute versionAttribute = result.Document.Attribute("version");
 
-            var defaultsToVersionOne = 1;
-            result.Version = versionAttribute == null ? defaultsToVersionOne : int.Parse(versionAttribute.Value);
+            var defaultsToVersionOne = new Version(1, 0);
+            result.Version = versionAttribute == null ? defaultsToVersionOne : new Version(versionAttribute.Value);
             return result;
         }
     }

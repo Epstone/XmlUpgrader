@@ -1,5 +1,6 @@
 ﻿namespace UConfig.Core
 {
+    using System;
     using System.Collections.Generic;
 
     public class UpgradePlan
@@ -8,7 +9,7 @@
 
         internal dynamic AddedSettings { get; set; }
 
-        public int UpgradeToVersion { get; internal set; }
+        public Version UpgradeToVersion { get; internal set; }
 
         public List<string> RemovedElements { get; set; } = new List<string>();
 
@@ -23,10 +24,14 @@
             RenamingSettings = elementsToRename;
             return this;
         }
-
-        public UpgradePlan SetVersion(int version)
+        public UpgradePlan SetVersion(Version version)
         {
             UpgradeToVersion = version;
+            return this;
+        }
+        public UpgradePlan SetVersion(string version)
+        {
+            UpgradeToVersion = new Version(version);
             return this;
         }
 

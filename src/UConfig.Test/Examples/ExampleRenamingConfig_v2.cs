@@ -1,5 +1,6 @@
 ﻿namespace UConfig.Test.Examples
 {
+    using System;
     using Core;
 
     internal class ExampleRenamingConfigV2 : IUpgradableConfig
@@ -16,6 +17,6 @@
             // todo use in test
         }
 
-        public int Version => 2;
+        public Version Version => new Version(2,0);
     }
 }
