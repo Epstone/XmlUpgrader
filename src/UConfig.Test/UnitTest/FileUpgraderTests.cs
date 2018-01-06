@@ -111,7 +111,7 @@
             ConfigurationFile configFile = ConfigurationFile.FromXElement(DefaultXmlVersionOne);
 
             //var map = new RenameMap()
-            dynamic renameMap = new ExpandoObject();    
+            dynamic renameMap = new ExpandoObject();
             renameMap.ExampleStringRenamed = "/ExampleString";
 
             var upgradePlan = new UpgradePlan()
@@ -139,7 +139,7 @@
 
             var fileUpgrader = new FileUpgrader(upgradePlan, configFile);
             ConfigurationFile upgradedConfig = fileUpgrader.Upgrade();
-            upgradedConfig.Document. Element("ExampleString").Should().BeNull();
+            upgradedConfig.Document.Element("ExampleString").Should().BeNull();
             upgradedConfig.Document.Should().HaveElement("TestStructure").Which.
                 Should().HaveElement("MovedSetting").Which.Value.Should().Be("test");
         }
@@ -175,7 +175,7 @@
 
             var upgradePlan = new UpgradePlan()
                 .SetVersion(2)
-                .RemoveElements(new []{"/ExampleString"});
+                .RemoveElements(new[] { "/ExampleString" });
 
             var fileUpgrader = new FileUpgrader(upgradePlan, upgradableFile);
 
@@ -183,7 +183,29 @@
             upgradedFile.Version.Should().Be(2);
         }
 
-        // todo load xml without version has flag set
+
+        [Fact]
+        public void UpgradeFromVersionTwoToVersionThree()
+        {
+            var config = DefaultXmlVersionOne;
+            config.Attribute("version").Value = "2";
+
+            var configFile = ConfigurationFile.FromXElement(config);
+            configFile.Version.Should().Be(2);
+
+
+            dynamic elementsToAdd = new ExpandoObject();
+            elementsToAdd.AddedElementIsHere = "test-value";
+            UpgradePlan plan = new UpgradePlan()
+                                    .AddElements(elementsToAdd)
+                                    .SetVersion(3);
+
+
+            var upgrader = new FileUpgrader(plan, configFile);
+            ConfigurationFile upgradedConfig = upgrader.Upgrade();
+            upgradedConfig.Version.Should().Be(3);
+        }
+
         // todo upgrade for two versions
         // todo too high upgrade version throws exception
         // todo allow versions with major.minor.revision.build number
