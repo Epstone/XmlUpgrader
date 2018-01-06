@@ -27,7 +27,10 @@
         {
             var result = new ConfigurationFile();
             result.Document = xml;
-            result.Version = int.Parse(result.Document.Attribute("version").Value);
+            XAttribute versionAttribute = result.Document.Attribute("version");
+
+            var defaultsToVersionOne = 1;
+            result.Version = versionAttribute == null ? defaultsToVersionOne : int.Parse(versionAttribute.Value);
             return result;
         }
     }

@@ -25,6 +25,7 @@
             }
         }
 
+
         private XElement ConfigVersionOne
         {
             get
@@ -162,8 +163,29 @@
             upgradedConfig.Document.Element("ExampleString").Should().BeNull();
         }
 
+        [Fact]
+        public void MissingVersionAttributeIsHandledAsVersionOne()
+        {
+            var configXml = DefaultXmlVersionOne;
+            configXml.Attribute("version").Should().NotBeNull();
+            configXml.Attribute("version").Remove();
+            configXml.Attribute("version").Should().BeNull();
+
+            var upgradableFile = ConfigurationFile.FromXElement(configXml);
+
+            var upgradePlan = new UpgradePlan()
+                .SetVersion(2)
+                .RemoveElements(new []{"/ExampleString"});
+
+            var fileUpgrader = new FileUpgrader(upgradePlan, upgradableFile);
+
+            ConfigurationFile upgradedFile = fileUpgrader.Upgrade();
+            upgradedFile.Version.Should().Be(2);
+        }
+
         // todo load xml without version has flag set
         // todo upgrade for two versions
         // todo too high upgrade version throws exception
+        // todo allow versions with major.minor.revision.build number
     }
 }
