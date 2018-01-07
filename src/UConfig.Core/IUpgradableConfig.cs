@@ -5,7 +5,5 @@
     public interface IUpgradableConfig
     {
         UpgradePlan GetUpgradePlan();
-
-        Version Version { get; }
     }
 }
