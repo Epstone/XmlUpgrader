@@ -25,7 +25,7 @@
 
 
         [Fact]
-        public void UpgradeXmlFile()
+        public void UpgradeXmlFileForTwoVersions()
         {
             string xmlToUpgrade = $@"{ConfigurationXmlDirectory}Config_v1.xml";
             var xmlUpgradeReference = @"Examples\Xml\Config_v2.xml";
@@ -35,7 +35,26 @@
             upgrader.AddRegistration(new Version(1, 0), xmlToUpgrade);
             upgrader.AddRegistration(new Version(2, 0), xmlUpgradeReference, typeof(ExampleConfigV2));
 
-            // verify output xml compatible with reference xml
+            upgrader.UpgradeXml(xmlToUpgrade);
+
+            // load config via .net core configuration
+            var updatedConfig = GetConfig<ExampleConfigV2>(xmlToUpgrade);
+            var expected = GetConfig<ExampleConfigV2>(xmlUpgradeReference);
+
+            updatedConfig.ShouldBeEquivalentTo(expected);
+        }
+
+        [Fact]
+        public void UpgradeXmlFileWithoutVersionInfo()
+        {
+            string xmlToUpgrade = $@"{ConfigurationXmlDirectory}Config_v1_missing_version.xml";
+            var xmlUpgradeReference = @"Examples\Xml\Config_v2.xml";
+
+            var upgrader = new Upgrader();
+
+            upgrader.AddRegistration(new Version(1, 0), xmlToUpgrade);
+            upgrader.AddRegistration(new Version(2, 0), xmlUpgradeReference, typeof(ExampleConfigV2));
+
             upgrader.UpgradeXml(xmlToUpgrade);
 
             // load config via .net core configuration

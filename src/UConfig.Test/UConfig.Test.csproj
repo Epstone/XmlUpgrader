@@ -202,6 +202,9 @@
     <Analyzer Include="..\packages\xunit.analyzers.0.7.0\analyzers\dotnet\cs\xunit.analyzers.dll" />
   </ItemGroup>
   <ItemGroup>
+    <Content Include="Examples\Xml\Config_v1_missing_version.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="Examples\Xml\Config_v1.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>

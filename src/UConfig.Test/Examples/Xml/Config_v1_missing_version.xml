@@ -1,0 +1,6 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+
+<configuration>
+  <TestString>HelloWorld</TestString>
+  <TestInteger>123</TestInteger>
+</configuration>
