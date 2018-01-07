@@ -22,7 +22,7 @@
 
             upgrader.Verify();
         }
-        
+
 
         [Fact]
         public void UpgradeXmlFile()
@@ -32,8 +32,8 @@
 
             var upgrader = new Upgrader();
 
-            upgrader.AddRegistration(new Version(1,0), xmlToUpgrade);
-            upgrader.AddRegistration(new Version(2,0),xmlUpgradeReference,typeof(ExampleConfigV2));
+            upgrader.AddRegistration(new Version(1, 0), xmlToUpgrade);
+            upgrader.AddRegistration(new Version(2, 0), xmlUpgradeReference, typeof(ExampleConfigV2));
 
             // verify output xml compatible with reference xml
             upgrader.UpgradeXml(xmlToUpgrade);
