@@ -3,7 +3,7 @@
     using System;
     using Core;
 
-    internal class ExampleRenamingConfigV2 : IUpgradableConfig
+    internal class ExampleRenamingConfigV2 : IUpgradePlanProvider
     {
         public string TestString { get; set; }
 

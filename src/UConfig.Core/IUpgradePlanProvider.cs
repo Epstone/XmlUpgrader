@@ -2,7 +2,7 @@
 {
     using System;
 
-    public interface IUpgradableConfig
+    public interface IUpgradePlanProvider
     {
         UpgradePlan GetUpgradePlan();
     }

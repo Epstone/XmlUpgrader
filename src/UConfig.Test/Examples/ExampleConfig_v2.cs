@@ -3,7 +3,7 @@
     using System.Dynamic;
     using Core;
 
-    internal class ExampleConfigV2 : IUpgradableConfig
+    internal class ExampleConfigV2 : IUpgradePlanProvider
     {
         public string TestString { get; set; }
 

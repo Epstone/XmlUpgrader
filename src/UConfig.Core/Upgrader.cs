@@ -68,7 +68,7 @@
 
         public UpgradePlan GetUpgradePlan()
         {
-            return ((IUpgradableConfig) Activator.CreateInstance(type)).GetUpgradePlan();
+            return ((IUpgradePlanProvider) Activator.CreateInstance(type)).GetUpgradePlan();
         }
 
         public Version Version { get; }
