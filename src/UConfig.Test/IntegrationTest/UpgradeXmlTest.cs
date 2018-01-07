@@ -1,5 +1,6 @@
 ﻿namespace UConfig.Test.IntegrationTest
 {
+    using System;
     using Core;
     using Examples;
     using FluentAssertions;
@@ -10,19 +11,18 @@
     {
         private static readonly string ConfigurationXmlDirectory = @"Examples\Xml\";
 
+
         [Fact]
-        public void AutomaticVerificationProcess()
+        public void DetailedRegistration()
         {
-            // register all upgradable interfaces
             var upgrader = new Upgrader();
-            upgrader.RegisterAll(GetType().Assembly);
 
-            // register all config files
-            upgrader.AddXmlConfigurationDir(ConfigurationXmlDirectory);
+            upgrader.AddRegistration(new Version(1, 0), @"Examples\Xml\Config_v1.xml");
+            upgrader.AddRegistration(new Version(2, 0), @"Examples\Xml\Config_v2.xml", typeof(ExampleConfigV2));
 
-            // call verify to get an automated verification of the upgrades
             upgrader.Verify();
         }
+        
 
         [Fact]
         public void UpgradeXmlFile()

@@ -22,55 +22,50 @@
             ReadUpgradPlan(new T());
         }
 
-        public void RegisterAll(Assembly assembly)
-        {
-            IEnumerable<Type> types = assembly.GetTypes().Where(t => typeof(IUpgradableConfig).IsAssignableFrom(t));
-            Registrations.AddRange(types);
+        //public void RegisterAll(Assembly assembly)
+        //{
+        //    IEnumerable<Type> types = assembly.GetTypes().Where(t => typeof(IUpgradableConfig).IsAssignableFrom(t));
+        //    Registrations.AddRange(types);
 
-            foreach (Type registration in Registrations)
-            {
-                ReadUpgradPlan((IUpgradableConfig)Activator.CreateInstance(registration));
-            }
-        }
+        //    foreach (Type registration in Registrations)
+        //    {
+        //        ReadUpgradPlan((IUpgradableConfig)Activator.CreateInstance(registration));
+        //    }
+        //}
 
-        public void AddXmlConfigurationDir(string directory)
-        {
-            XmlConfigurationDirectory = directory;
-            xmlFilePaths = Directory.GetFiles(XmlConfigurationDirectory, "*.xml");
+        //public void AddXmlConfigurationDir(string directory)
+        //{
+        //    XmlConfigurationDirectory = directory;
+        //    xmlFilePaths = Directory.GetFiles(XmlConfigurationDirectory, "*.xml");
 
-            if (xmlFilePaths.Length == 0)
-            {
-                throw new InvalidOperationException("no xml configuration files found");
-            }
-            configFiles.AddRange(xmlFilePaths.Select(ConfigurationFile.LoadXml));
-        }
+        //    if (xmlFilePaths.Length == 0)
+        //    {
+        //        throw new InvalidOperationException("no xml configuration files found");
+        //    }
+        //    configFiles.AddRange(xmlFilePaths.Select(ConfigurationFile.LoadXml));
+        //}
 
         public void Verify()
         {
-            if (xmlFilePaths.Length == 1)
+            if (extendedRegistrations.Count == 1)
             {
                 throw new InvalidOperationException("just one configuration file found, nothing to upgrade.");
             }
 
+            extendedRegistrations.ForEach(x=>x.LoadFile());
 
             // verify, that we have an upgrade script to the next version
-            ConfigurationFile[] configurationFiles = configFiles.OrderBy(x => x.Version).ToArray();
-            for (var i = 0; i < configurationFiles.Length - 1; i++) // do not upgrade to a version which is not existing yet
+            var registrations = extendedRegistrations.OrderBy(x => x.Version).ToArray();
+            for (var i = 1; i < registrations.Length - 1; i++) 
             {
-                ConfigurationFile configurationFile = configurationFiles[i];
-                ConfigurationFile nextConfigurationFile = configurationFiles[i + 1];
-            
-                UpgradePlan upgradePlan = upgradePlans.FirstOrDefault(m => m.UpgradeToVersion == nextConfigurationFile.Version);
-                if (upgradePlan == null)
-                {
-                    throw new InvalidOperationException($"No upgrade script for xml version {configurationFile.Version} found.");
-                }
+                var registration = registrations[i];
+                var nextRegistration = registrations[i + 1];
 
-                var upgrader = new FileUpgrader(upgradePlan, configurationFile);
+                var upgrader = new FileUpgrader(registration.GetUpgradePlan(), registration.File);
                 ConfigurationFile upgradeConfig = upgrader.Upgrade();
 
                 // execute the update and compare with reference version
-                upgradeConfig.VerifyEqualTo(nextConfigurationFile);
+                upgradeConfig.VerifyEqualTo(nextRegistration.File);
             }
         }
 
@@ -95,6 +90,40 @@
             UpgradePlan upgradePlan = upgradableConfig.GetUpgradePlan();
             upgradePlan.UpgradeToVersion = upgradableConfig.Version;
             upgradePlans.Add(upgradePlan);
+        }
+
+        public void AddRegistration(Version version, string filePath, Type type = null)
+        {
+            this.extendedRegistrations.Add(new Registration(filePath, version, type));
+        }
+
+        private readonly List<Registration> extendedRegistrations = new List<Registration>();
+    }
+
+    internal class Registration
+    {
+        public Version Version { get; }
+        private Type type;
+
+        public Registration(string filePath, Version version, Type type)
+        {
+            FilePath = filePath;
+            this.Version = version;
+            this.type = type;
+        }
+
+        internal string FilePath { get; set; }
+
+        public void LoadFile()
+        {
+            this.File = ConfigurationFile.LoadXml(this.FilePath);
+        }
+
+        public ConfigurationFile File { get; set; }
+
+        public UpgradePlan GetUpgradePlan()
+        {
+            return ((IUpgradableConfig) Activator.CreateInstance(type)).GetUpgradePlan();
         }
     }
 }
