@@ -18,7 +18,7 @@
             extendedRegistrations.ForEach(x => x.LoadFile());
 
             // verify, that we have an upgrade script to the next version
-            var registrations = extendedRegistrations.OrderBy(x => x.Version). ToArray();
+            var registrations = extendedRegistrations.OrderBy(x => x.Version).ToArray();
             for (var i = 1; i < registrations.Length - 1; i++)
             {
                 var registration = registrations[i];
@@ -32,16 +32,32 @@
             }
         }
 
-        public void UpgradeXml(string xmlToUpgrade)
+        public UpgradeResult UpgradeXml(string xmlToUpgrade)
         {
             ConfigurationFile configToUpgrade = ConfigurationFile.LoadXml(xmlToUpgrade);
-            foreach (var registration in extendedRegistrations.OrderBy(x => x.Version).Skip(1))
+
+            if (configToUpgrade.Version.Equals(extendedRegistrations.Max(x => x.Version)))
+            {
+                return new UpgradeResult
+                {
+                    UpgradeNeeded = false
+                };
+            }
+
+            IEnumerable<Registration> upgradesToApply = extendedRegistrations
+                .OrderBy(x => x.Version)
+                .Where(x => x.Version > configToUpgrade.Version)
+                .ToArray();
+
+            foreach (var registration in upgradesToApply)
             {
                 var upgrader = new FileUpgrader(registration.GetUpgradePlan(), configToUpgrade);
                 configToUpgrade = upgrader.Upgrade();
             }
 
             configToUpgrade.Document.Save(xmlToUpgrade);
+
+            return new UpgradeResult();
         }
 
         public void AddRegistration(Version version, string filePath, Type type = null)
@@ -68,7 +84,7 @@
 
         public UpgradePlan GetUpgradePlan()
         {
-            return ((IUpgradePlanProvider) Activator.CreateInstance(type)).GetUpgradePlan();
+            return ((IUpgradePlanProvider)Activator.CreateInstance(type)).GetUpgradePlan();
         }
 
         public Version Version { get; }
