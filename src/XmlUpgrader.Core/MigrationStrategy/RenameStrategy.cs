@@ -13,7 +13,7 @@ namespace XmlUpgrader.Core.MigrationStrategy
 
         internal void Execute()
         {
-            this.TraverseTree(settingsTree, string.Empty, workingTree);
+            this.TraverseTree(ElementsToAddTree, string.Empty, WorkingTree);
         }
 
         internal XElement TraverseTree(dynamic renamingElement, string currentNodeName, XElement currentNode)
@@ -37,7 +37,7 @@ namespace XmlUpgrader.Core.MigrationStrategy
 
         private void MoveNodeByXpath(string xPath, string newName, XElement moveTarget)
         {
-            XElement oldNode = workingTree.XPathSelectElement(xPath);
+            XElement oldNode = WorkingTree.XPathSelectElement(xPath);
             oldNode.Remove();
             oldNode.Name = newName;
             moveTarget.Add(oldNode);

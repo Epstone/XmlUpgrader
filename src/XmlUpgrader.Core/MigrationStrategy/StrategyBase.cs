@@ -4,13 +4,13 @@ namespace XmlUpgrader.Core.MigrationStrategy
 
     internal abstract class StrategyBase
     {
-        protected dynamic settingsTree;
-        protected XElement workingTree;
+        protected dynamic ElementsToAddTree;
+        protected XElement WorkingTree;
 
-        protected StrategyBase(XElement workingTree, dynamic settingsTree)
+        protected StrategyBase(XElement workingTree, dynamic elementsToAddTree)
         {
-            this.workingTree = workingTree;
-            this.settingsTree = settingsTree;
+            this.WorkingTree = workingTree;
+            this.ElementsToAddTree = elementsToAddTree;
         }
 
         protected XElement GetOrCreateNode(string currentNodeName, XElement currentNode)

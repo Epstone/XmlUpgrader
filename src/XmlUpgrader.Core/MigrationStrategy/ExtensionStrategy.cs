@@ -6,13 +6,13 @@ namespace XmlUpgrader.Core.MigrationStrategy
 
     internal class ExtensionStrategy : StrategyBase
     {
-        internal ExtensionStrategy(XElement workingTree, dynamic addedSettings) : base(workingTree, (object) addedSettings)
+        internal ExtensionStrategy(XElement workingTree, dynamic addedElements) : base(workingTree, (object) addedElements)
         {
         }
 
         internal void Execute()
         {
-            this.TraverseTree(settingsTree, string.Empty, workingTree);
+            this.TraverseTree(ElementsToAddTree, string.Empty, WorkingTree);
         }
 
         internal XElement TraverseTree(dynamic renamingElement, string currentNodeName, XElement currentNode)

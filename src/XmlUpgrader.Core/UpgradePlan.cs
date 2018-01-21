@@ -13,7 +13,7 @@ namespace XmlUpgrader.Core
 
         public UpgradePlan RenameElements(dynamic elementsToRename)
         {
-            RenamingSettings = elementsToRename;
+            RenamedElements = elementsToRename;
             return this;
         }
 
@@ -35,7 +35,7 @@ namespace XmlUpgrader.Core
             return this;
         }
 
-        internal dynamic RenamingSettings { get; set; }
+        internal dynamic RenamedElements { get; set; }
 
         internal dynamic AddedSettings { get; set; }
         

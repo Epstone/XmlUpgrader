@@ -26,9 +26,9 @@ namespace XmlUpgrader.Core
                 removeStrategy.Execute();
             }
 
-            if (upgradePlan.RenamingSettings != null)
+            if (upgradePlan.RenamedElements != null)
             {
-                RenameStrategy renameStrategy = new RenameStrategy(workingTree, upgradePlan.RenamingSettings);
+                RenameStrategy renameStrategy = new RenameStrategy(workingTree, upgradePlan.RenamedElements);
                 renameStrategy.Execute();
             }
 
