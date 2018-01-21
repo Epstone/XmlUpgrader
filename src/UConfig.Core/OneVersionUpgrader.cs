@@ -1,17 +1,15 @@
 ﻿namespace UConfig.Core
 {
-    using System.Collections.Generic;
     using System.Xml.Linq;
-    using System.Xml.XPath;
 
-    internal class FileUpgrader
+    internal class OneVersionUpgrader
     {
         private readonly ConfigurationFile configFile;
         private readonly UpgradePlan upgradePlan;
         private XElement workingTree;
 
 
-        public FileUpgrader(UpgradePlan upgradePlan, ConfigurationFile configFile)
+        public OneVersionUpgrader(UpgradePlan upgradePlan, ConfigurationFile configFile)
         {
             this.upgradePlan = upgradePlan;
             this.configFile = configFile;
@@ -44,31 +42,6 @@
                 Document = workingTree,
                 Version = upgradePlan.UpgradeToVersion
             };
-        }
-    }
-
-    internal class RemoveStrategy
-    {
-        private XElement workingTree;
-        private List<string> removedElements;
-
-        public RemoveStrategy(XElement workingTree, List<string> removedElements)
-        {
-            this.workingTree = workingTree;
-            this.removedElements = removedElements;
-        }
-
-        public void Execute()
-        {
-            removedElements.ForEach(x =>
-                {
-                    XElement selectedElement = this.workingTree.XPathSelectElement(x);
-                    if (selectedElement != null)
-                    {
-                        selectedElement.Remove();
-                    }
-                }
-            );
         }
     }
 }

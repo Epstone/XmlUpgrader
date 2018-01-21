@@ -18,7 +18,7 @@
         [Fact]
         public void DetailedRegistration()
         {
-            var upgrader = new Upgrader();
+            var upgrader = new XmlFileUpgrader();
 
             upgrader.AddRegistration(new Version(1, 0), @"Examples\Xml\Config_v1.xml");
             upgrader.AddRegistration(new Version(2, 0), @"Examples\Xml\Config_v2.xml", typeof(ExampleConfigV2));
@@ -32,7 +32,7 @@
             string versionOneXml = GetVersionOneCopy();
             var versionTwoXml = GetVersionTwoCopy();
 
-            var upgrader = new Upgrader();
+            var upgrader = new XmlFileUpgrader();
 
             upgrader.AddRegistration(new Version(1, 0), versionOneXml);
             upgrader.AddRegistration(new Version(2, 0), versionTwoXml, typeof(ExampleConfigV2));
@@ -49,7 +49,7 @@
             string xmlToUpgrade = GetVersionOneCopy();
             var xmlUpgradeReference = GetVersionTwoCopy();
 
-            var upgrader = new Upgrader();
+            var upgrader = new XmlFileUpgrader();
 
             upgrader.AddRegistration(new Version(1, 0), xmlToUpgrade);
             upgrader.AddRegistration(new Version(2, 0), xmlUpgradeReference, typeof(ExampleConfigV2));
@@ -83,7 +83,7 @@
             string xmlToUpgrade = $@"{ConfigurationXmlDirectory}Config_v1_missing_version.xml";
             var xmlUpgradeReference = @"Examples\Xml\Config_v2.xml";
 
-            var upgrader = new Upgrader();
+            var upgrader = new XmlFileUpgrader();
 
             upgrader.AddRegistration(new Version(1, 0), xmlToUpgrade);
             upgrader.AddRegistration(new Version(2, 0), xmlUpgradeReference, typeof(ExampleConfigV2));

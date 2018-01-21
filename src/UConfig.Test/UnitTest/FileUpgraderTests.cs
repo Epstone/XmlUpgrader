@@ -64,7 +64,7 @@
                 .AddElements(elementsToAdd).SetVersion(Version2Oh);
             
 
-            var fileUpgrader = new FileUpgrader(upgradePlan, configFile);
+            var fileUpgrader = new OneVersionUpgrader(upgradePlan, configFile);
 
             ConfigurationFile upgradedConfig = fileUpgrader.Upgrade();
             upgradedConfig.Document.Element("AddedNumber").Value.Should().Be("3");
@@ -83,7 +83,7 @@
             var upgradePlan = new UpgradePlan().SetVersion(Version2Oh)
             .AddElements(elementsToAdd);
 
-            var fileUpgrader = new FileUpgrader(upgradePlan, configFile);
+            var fileUpgrader = new OneVersionUpgrader(upgradePlan, configFile);
             ConfigurationFile upgradedConfig = fileUpgrader.Upgrade();
             upgradedConfig.Document.Element("AddedStructure").Element("SettingOne").Value.Should().Be("works");
         }
@@ -100,7 +100,7 @@
             var upgradePlan = new UpgradePlan().SetVersion(Version2Oh)
                                     .AddElements(elementsToAdd);
 
-            var fileUpgrader = new FileUpgrader(upgradePlan, configFile);
+            var fileUpgrader = new OneVersionUpgrader(upgradePlan, configFile);
             ConfigurationFile upgradedConfig = fileUpgrader.Upgrade();
             upgradedConfig.Document.Element("ExampleStructure").Element("DeepSettingOne").Value.Should().Be("One");
             upgradedConfig.Document.Element("ExampleStructure").Element("DeepSettingTwo").Value.Should().Be("Two");
@@ -119,7 +119,7 @@
             var upgradePlan = new UpgradePlan().SetVersion(Version2Oh)
                 .RenameElements(renameMap);
 
-            var fileUpgrader = new FileUpgrader(upgradePlan, configFile);
+            var fileUpgrader = new OneVersionUpgrader(upgradePlan, configFile);
             ConfigurationFile upgradedConfig = fileUpgrader.Upgrade();
             upgradedConfig.Document.Element("ExampleString").Should().BeNull();
             upgradedConfig.Document.Element("ExampleStringRenamed").Value.Should().Be("test");
@@ -137,7 +137,7 @@
             var upgradePlan = new UpgradePlan().SetVersion(Version2Oh)
                 .RenameElements(renameMap);
 
-            var fileUpgrader = new FileUpgrader(upgradePlan, configFile);
+            var fileUpgrader = new OneVersionUpgrader(upgradePlan, configFile);
             ConfigurationFile upgradedConfig = fileUpgrader.Upgrade();
             upgradedConfig.Document.Element("ExampleString").Should().BeNull();
             upgradedConfig.Document.Should().HaveElement("TestStructure").Which.
@@ -158,7 +158,7 @@
             var upgradePlan = new UpgradePlan().SetVersion(Version2Oh)
                 .RemoveElements(removeElements).AddElements(test);
 
-            var fileUpgrader = new FileUpgrader(upgradePlan, configFile);
+            var fileUpgrader = new OneVersionUpgrader(upgradePlan, configFile);
             ConfigurationFile upgradedConfig = fileUpgrader.Upgrade();
             upgradedConfig.Document.Should().NotBeNull();
             upgradedConfig.Document.Element("ExampleString").Should().BeNull();
@@ -177,7 +177,7 @@
             var upgradePlan = new UpgradePlan().SetVersion(Version2Oh)
                 .RemoveElements(new[] { "/ExampleString" });
 
-            var fileUpgrader = new FileUpgrader(upgradePlan, upgradableFile);
+            var fileUpgrader = new OneVersionUpgrader(upgradePlan, upgradableFile);
 
             ConfigurationFile upgradedFile = fileUpgrader.Upgrade();
             upgradedFile.Version.Should().Be(Version2Oh);
@@ -202,7 +202,7 @@
 
 
 
-            var upgrader = new FileUpgrader(plan, configFile);
+            var upgrader = new OneVersionUpgrader(plan, configFile);
             ConfigurationFile upgradedConfig = upgrader.Upgrade();
             upgradedConfig.Version.Should().Be(Version3Oh);
         }

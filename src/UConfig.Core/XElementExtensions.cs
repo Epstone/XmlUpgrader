@@ -1,6 +1,6 @@
 ﻿namespace UConfig.Core
 {
-    //https://stackoverflow.com/questions/7318157/best-way-to-compare-xelement-objects
+    //source https://stackoverflow.com/questions/7318157/best-way-to-compare-xelement-objects
     using System;
     using System.Collections.Generic;
     using System.Linq;

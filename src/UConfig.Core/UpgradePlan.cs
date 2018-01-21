@@ -5,14 +5,6 @@
 
     public class UpgradePlan
     {
-        internal dynamic RenamingSettings { get; set; }
-
-        internal dynamic AddedSettings { get; set; }
-
-        public Version UpgradeToVersion { get; internal set; }
-
-        public List<string> RemovedElements { get; set; } = new List<string>();
-
         public UpgradePlan AddElements(dynamic elementsToAdd)
         {
             AddedSettings = elementsToAdd;
@@ -24,11 +16,13 @@
             RenamingSettings = elementsToRename;
             return this;
         }
+
         public UpgradePlan SetVersion(Version version)
         {
             UpgradeToVersion = version;
             return this;
         }
+
         public UpgradePlan SetVersion(string version)
         {
             UpgradeToVersion = new Version(version);
@@ -40,5 +34,13 @@
             RemovedElements.AddRange(removeElements);
             return this;
         }
+
+        internal dynamic RenamingSettings { get; set; }
+
+        internal dynamic AddedSettings { get; set; }
+
+        public Version UpgradeToVersion { get; internal set; }
+
+        public List<string> RemovedElements { get; set; } = new List<string>();
     }
 }

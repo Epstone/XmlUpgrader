@@ -5,8 +5,8 @@
 
     public class RenameMap
     {
-        private string oldName;
         internal Dictionary<string, string> mapping = new Dictionary<string, string>();
+        private string oldName;
 
         public RenameMap RenameFrom(string fromName)
         {

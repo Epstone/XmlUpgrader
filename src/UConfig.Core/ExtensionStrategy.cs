@@ -6,7 +6,7 @@
 
     internal class ExtensionStrategy : StrategyBase
     {
-        public ExtensionStrategy(XElement workingTree, dynamic addedSettings) : base(workingTree, (object)addedSettings)
+        public ExtensionStrategy(XElement workingTree, dynamic addedSettings) : base(workingTree, (object) addedSettings)
         {
         }
 
@@ -19,7 +19,7 @@
         {
             XElement xmlNode = GetOrCreateNode(currentNodeName, currentNode);
 
-            foreach (var property in (IDictionary<string, object>)renamingElement)
+            foreach (var property in (IDictionary<string, object>) renamingElement)
             {
                 if (property.Value is ExpandoObject)
                 {

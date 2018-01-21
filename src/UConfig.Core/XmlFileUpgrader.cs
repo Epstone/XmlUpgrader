@@ -4,7 +4,7 @@
     using System.Collections.Generic;
     using System.Linq;
 
-    public class Upgrader
+    public class XmlFileUpgrader
     {
         private readonly List<Registration> extendedRegistrations = new List<Registration>();
 
@@ -24,7 +24,7 @@
                 var registration = registrations[i];
                 var nextRegistration = registrations[i + 1];
 
-                var upgrader = new FileUpgrader(registration.GetUpgradePlan(), registration.File);
+                var upgrader = new OneVersionUpgrader(registration.GetUpgradePlan(), registration.File);
                 ConfigurationFile upgradeConfig = upgrader.Upgrade();
 
                 // execute the update and compare with reference version
@@ -51,7 +51,7 @@
 
             foreach (var registration in upgradesToApply)
             {
-                var upgrader = new FileUpgrader(registration.GetUpgradePlan(), configToUpgrade);
+                var upgrader = new OneVersionUpgrader(registration.GetUpgradePlan(), configToUpgrade);
                 configToUpgrade = upgrader.Upgrade();
             }
 
@@ -84,7 +84,7 @@
 
         public UpgradePlan GetUpgradePlan()
         {
-            return ((IUpgradePlanProvider)Activator.CreateInstance(type)).GetUpgradePlan();
+            return ((IUpgradePlanProvider) Activator.CreateInstance(type)).GetUpgradePlan();
         }
 
         public Version Version { get; }

@@ -7,8 +7,7 @@
 
     internal class RenameStrategy : StrategyBase
     {
-       
-        public RenameStrategy(XElement workingTree, dynamic renamingTree):base(workingTree, (object)renamingTree)
+        public RenameStrategy(XElement workingTree, dynamic renamingTree) : base(workingTree, (object) renamingTree)
         {
         }
 
@@ -43,7 +42,5 @@
             oldNode.Name = newName;
             moveTarget.Add(oldNode);
         }
-
-        
     }
 }
