@@ -39,8 +39,6 @@
 
             UpgradeResult result =  upgrader.UpgradeXml(versionTwoXml);
 
-             //result.UpgradeNeeded.Should 
-
             VerifyEquivalent<ExampleConfigV2>(versionTwoXml, GetVersionTwoCopy());
         }
 
