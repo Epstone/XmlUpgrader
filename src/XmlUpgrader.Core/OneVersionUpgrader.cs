@@ -5,20 +5,20 @@ namespace XmlUpgrader.Core
 
     internal class OneVersionUpgrader
     {
-        private readonly XmlFile configFile;
+        private readonly XmlFile xmlFile;
         private readonly UpgradePlan upgradePlan;
         private XElement workingTree;
 
 
-        internal OneVersionUpgrader(UpgradePlan upgradePlan, XmlFile configFile)
+        internal OneVersionUpgrader(UpgradePlan upgradePlan, XmlFile xmlFile)
         {
             this.upgradePlan = upgradePlan;
-            this.configFile = configFile;
+            this.xmlFile = xmlFile;
         }
 
         internal XmlFile Upgrade()
         {
-            workingTree = new XElement(configFile.Document);
+            workingTree = new XElement(xmlFile.Document);
 
             if (upgradePlan.RemovedElements != null)
             {

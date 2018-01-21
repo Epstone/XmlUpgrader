@@ -5,9 +5,9 @@ namespace XmlUpgrader.Core
 
     internal class XmlFile
     {
-        public void VerifyEqualTo(XmlFile updatedConfig)
+        public void VerifyEqualTo(XmlFile upgradedXmlFile)
         {
-            XmlUtils.DeepEqualsWithNormalization(new XDocument(Document), new XDocument(updatedConfig.Document), null); //todo remove null
+            XmlUtils.DeepEqualsWithNormalization(new XDocument(Document), new XDocument(upgradedXmlFile.Document), null); //todo remove null
         }
 
         public static XmlFile LoadXml(string xmlPath)

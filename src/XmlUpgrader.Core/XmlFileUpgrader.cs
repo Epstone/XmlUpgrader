@@ -12,7 +12,7 @@ namespace XmlUpgrader.Core
         {
             if (extendedRegistrations.Count == 1)
             {
-                throw new InvalidOperationException("just one configuration file found, nothing to upgrade.");
+                throw new InvalidOperationException("just one XML file found, nothing to upgrade.");
             }
 
             extendedRegistrations.ForEach(x => x.LoadFile());
@@ -25,18 +25,18 @@ namespace XmlUpgrader.Core
                 var nextRegistration = registrations[i + 1];
 
                 var upgrader = new OneVersionUpgrader(registration.GetUpgradePlan(), registration.File);
-                XmlFile upgradeConfig = upgrader.Upgrade();
+                XmlFile upgradedXmlFile = upgrader.Upgrade();
 
                 // execute the update and compare with reference version
-                upgradeConfig.VerifyEqualTo(nextRegistration.File);
+                upgradedXmlFile.VerifyEqualTo(nextRegistration.File);
             }
         }
 
-        public UpgradeResult UpgradeXml(string xmlToUpgrade)
+        public UpgradeResult UpgradeXml(string xmlToUpgradeFilePath)
         {
-            XmlFile configToUpgrade = XmlFile.LoadXml(xmlToUpgrade);
+            XmlFile xmlToUpgrade = XmlFile.LoadXml(xmlToUpgradeFilePath);
 
-            if (configToUpgrade.Version.Equals(extendedRegistrations.Max(x => x.Version)))
+            if (xmlToUpgrade.Version.Equals(extendedRegistrations.Max(x => x.Version)))
             {
                 return new UpgradeResult
                 {
@@ -46,16 +46,16 @@ namespace XmlUpgrader.Core
 
             IEnumerable<Registration> upgradesToApply = extendedRegistrations
                 .OrderBy(x => x.Version)
-                .Where(x => x.Version > configToUpgrade.Version)
+                .Where(x => x.Version > xmlToUpgrade.Version)
                 .ToArray();
 
             foreach (var registration in upgradesToApply)
             {
-                var upgrader = new OneVersionUpgrader(registration.GetUpgradePlan(), configToUpgrade);
-                configToUpgrade = upgrader.Upgrade();
+                var upgrader = new OneVersionUpgrader(registration.GetUpgradePlan(), xmlToUpgrade);
+                xmlToUpgrade = upgrader.Upgrade();
             }
 
-            configToUpgrade.Document.Save(xmlToUpgrade);
+            xmlToUpgrade.Document.Save(xmlToUpgradeFilePath);
 
             return new UpgradeResult();
         }
