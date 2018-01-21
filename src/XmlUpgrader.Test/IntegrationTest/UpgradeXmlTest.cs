@@ -1,4 +1,4 @@
-﻿namespace UConfig.Test.IntegrationTest
+namespace XmlUpgrader.Test.IntegrationTest
 {
     using System;
     using System.IO;

@@ -1,4 +1,4 @@
-﻿namespace UConfig.Core
+namespace XmlUpgrader.Core
 {
     //source https://stackoverflow.com/questions/7318157/best-way-to-compare-xelement-objects
     using System;

@@ -1,4 +1,4 @@
-﻿namespace UConfig.Core
+namespace XmlUpgrader.Core
 {
     public class UpgradeResult
     {

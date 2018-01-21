@@ -1,4 +1,4 @@
-﻿<?xml version="1.0" encoding="utf-8"?>
+<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\packages\xunit.core.2.3.1\build\xunit.core.props" Condition="Exists('..\packages\xunit.core.2.3.1\build\xunit.core.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -8,8 +8,8 @@
     <ProjectGuid>{54016B72-B9DD-4A16-8D9D-7F76E8307606}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>UConfig.Test</RootNamespace>
-    <AssemblyName>UConfig.Test</AssemblyName>
+    <RootNamespace>XmlUpgrader.Test</RootNamespace>
+    <AssemblyName>XmlUpgrader.Test</AssemblyName>
     <TargetFrameworkVersion>v4.6.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <NuGetPackageImportStamp>
@@ -213,9 +213,9 @@
     </Content>
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\UConfig.Core\UConfig.Core.csproj">
+    <ProjectReference Include="..\XmlUpgrader.Core\XmlUpgrader.Core.csproj">
       <Project>{cb6ceeaa-72d5-4f01-b2a3-7039dad58c23}</Project>
-      <Name>UConfig.Core</Name>
+      <Name>XmlUpgrader.Core</Name>
     </ProjectReference>
   </ItemGroup>
   <ItemGroup />

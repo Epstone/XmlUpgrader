@@ -1,4 +1,4 @@
-﻿namespace UConfig.Test.UnitTest
+namespace XmlUpgrader.Test.UnitTest
 {
     using System;
     using System.Collections.Generic;

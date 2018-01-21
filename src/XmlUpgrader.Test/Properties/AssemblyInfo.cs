@@ -1,13 +1,13 @@
-﻿using System.Reflection;
+using System.Reflection;
 using System.Runtime.InteropServices;
 
 // General Information about an assembly is controlled through the following
 // set of attributes. Change these attribute values to modify the information
 // associated with an assembly.
-[assembly: AssemblyTitle("UConfig.Test")]
+[assembly: AssemblyTitle("XmlUpgrader.Test")]
 [assembly: AssemblyDescription("")]
 [assembly: AssemblyConfiguration("")]
-[assembly: AssemblyProduct("UConfig.Test")]
+[assembly: AssemblyProduct("XmlUpgrader.Test")]
 [assembly: AssemblyTrademark("")]
 [assembly: AssemblyCulture("")]
 

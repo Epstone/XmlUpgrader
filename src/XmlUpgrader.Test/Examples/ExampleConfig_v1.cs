@@ -1,4 +1,4 @@
-﻿namespace UConfig.Test.Examples
+namespace XmlUpgrader.Test.Examples
 {
     public class ExampleConfigV1
     {
