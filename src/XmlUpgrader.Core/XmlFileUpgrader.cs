@@ -30,12 +30,13 @@ namespace XmlUpgrader.Core
                 // execute the update and compare with reference version
                 upgradedXmlFile.VerifyEqualTo(nextRegistration.File);
             }
+
+            // todo edge cases
         }
 
         public UpgradeResult UpgradeXml(string xmlToUpgradeFilePath)
         {
             XmlFile xmlToUpgrade = XmlFile.LoadXml(xmlToUpgradeFilePath);
-
             if (xmlToUpgrade.Version.Equals(registrations.Max(x => x.Version)))
             {
                 return new UpgradeResult
@@ -49,6 +50,8 @@ namespace XmlUpgrader.Core
                 .Where(x => x.Version > xmlToUpgrade.Version)
                 .ToArray();
 
+            var initialVersion = xmlToUpgrade.Version;
+
             foreach (var registration in upgradesToApply)
             {
                 var upgrader = new OneVersionUpgrader(registration.GetUpgradePlan(), xmlToUpgrade);
@@ -57,7 +60,12 @@ namespace XmlUpgrader.Core
 
             xmlToUpgrade.Document.Save(xmlToUpgradeFilePath);
 
-            return new UpgradeResult();
+            return new UpgradeResult()
+            {
+                 UpgradeNeeded = true,
+                 UpgradedFromVersion = initialVersion,
+                 UpgradedToVersion = xmlToUpgrade.Version
+            };
         }
 
         public void AddRegistration(Version version, string filePath, Type type = null)
@@ -84,7 +92,9 @@ namespace XmlUpgrader.Core
 
         public UpgradePlan GetUpgradePlan()
         {
-            return ((IUpgradePlanProvider) Activator.CreateInstance(type)).GetUpgradePlan();
+            UpgradePlan upgradePlan = ((IUpgradePlanProvider) Activator.CreateInstance(type)).GetUpgradePlan();
+            upgradePlan.SetVersion(this.Version);
+            return upgradePlan;
         }
 
         public Version Version { get; }

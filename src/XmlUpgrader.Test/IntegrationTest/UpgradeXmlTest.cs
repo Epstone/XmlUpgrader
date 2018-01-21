@@ -13,6 +13,8 @@ namespace XmlUpgrader.Test.IntegrationTest
         private static readonly string ConfigurationXmlDirectory = @"Examples\Xml\";
         private static readonly string VersionOnePath = $@"{ConfigurationXmlDirectory}Config_v1.xml";
         private static readonly string VersionTwoPath = $@"{ConfigurationXmlDirectory}Config_v2.xml";
+        private Version version_1 = new Version(1, 0);
+        private Version version_2 = new Version(2, 0);
 
 
         [Fact]
@@ -20,8 +22,8 @@ namespace XmlUpgrader.Test.IntegrationTest
         {
             var upgrader = new XmlFileUpgrader();
 
-            upgrader.AddRegistration(new Version(1, 0), @"Examples\Xml\Config_v1.xml");
-            upgrader.AddRegistration(new Version(2, 0), @"Examples\Xml\Config_v2.xml", typeof(ExampleConfigV2));
+            upgrader.AddRegistration(version_1, @"Examples\Xml\Config_v1.xml");
+            upgrader.AddRegistration(version_2, @"Examples\Xml\Config_v2.xml", typeof(ExampleConfigV2));
 
             upgrader.Verify();
         }
@@ -34,11 +36,12 @@ namespace XmlUpgrader.Test.IntegrationTest
 
             var upgrader = new XmlFileUpgrader();
 
-            upgrader.AddRegistration(new Version(1, 0), versionOneXml);
-            upgrader.AddRegistration(new Version(2, 0), versionTwoXml, typeof(ExampleConfigV2));
+            upgrader.AddRegistration(version_1, versionOneXml);
+            upgrader.AddRegistration(version_2, versionTwoXml, typeof(ExampleConfigV2));
 
             UpgradeResult result =  upgrader.UpgradeXml(versionTwoXml);
-
+            result.UpgradeNeeded.Should().BeFalse();
+            
             VerifyEquivalent<ExampleConfigV2>(versionTwoXml, GetVersionTwoCopy());
         }
 
@@ -46,17 +49,21 @@ namespace XmlUpgrader.Test.IntegrationTest
         [Fact]
         public void UpgradeXmlFileForTwoVersions()
         {
-            string xmlToUpgrade = GetVersionOneCopy();
-            var xmlUpgradeReference = GetVersionTwoCopy();
+            string xmlToUpgradeFilePath = GetVersionOneCopy();
+            var xmlUpgradeReferencePath = GetVersionTwoCopy();
 
             var upgrader = new XmlFileUpgrader();
 
-            upgrader.AddRegistration(new Version(1, 0), xmlToUpgrade);
-            upgrader.AddRegistration(new Version(2, 0), xmlUpgradeReference, typeof(ExampleConfigV2));
+            upgrader.AddRegistration(version_1, xmlToUpgradeFilePath);
+            upgrader.AddRegistration(version_2, xmlUpgradeReferencePath, typeof(ExampleConfigV2));
 
-            upgrader.UpgradeXml(xmlToUpgrade);
+            var result = upgrader.UpgradeXml(xmlToUpgradeFilePath);
+            result.UpgradeNeeded.Should().BeTrue();
 
-            VerifyEquivalent<ExampleConfigV2>(xmlToUpgrade, xmlUpgradeReference);
+            VerifyEquivalent<ExampleConfigV2>(xmlToUpgradeFilePath, xmlUpgradeReferencePath);
+
+            result.UpgradedFromVersion.ShouldBeEquivalentTo(version_1);
+            result.UpgradedToVersion.ShouldBeEquivalentTo(version_2);
         }
 
         private static string GetVersionTwoCopy()
@@ -85,8 +92,8 @@ namespace XmlUpgrader.Test.IntegrationTest
 
             var upgrader = new XmlFileUpgrader();
 
-            upgrader.AddRegistration(new Version(1, 0), xmlToUpgrade);
-            upgrader.AddRegistration(new Version(2, 0), xmlUpgradeReference, typeof(ExampleConfigV2));
+            upgrader.AddRegistration(version_1, xmlToUpgrade);
+            upgrader.AddRegistration(version_2, xmlUpgradeReference, typeof(ExampleConfigV2));
 
             upgrader.UpgradeXml(xmlToUpgrade);
 

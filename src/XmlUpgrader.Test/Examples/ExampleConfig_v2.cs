@@ -1,5 +1,6 @@
 namespace XmlUpgrader.Test.Examples
 {
+    using System;
     using System.Dynamic;
     using Core;
 

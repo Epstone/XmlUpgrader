@@ -41,6 +41,6 @@ namespace XmlUpgrader.Core
         
         public List<string> RemovedElements { get; set; } = new List<string>();
 
-        public Version UpgradeToVersion { get; internal set; }
+        internal Version UpgradeToVersion { get; set; }
     }
 }
