@@ -1,6 +1,7 @@
 namespace XmlUpgrader.Core
 {
     using System.Xml.Linq;
+    using MigrationStrategy;
 
     internal class OneVersionUpgrader
     {

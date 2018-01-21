@@ -1,4 +1,4 @@
-namespace XmlUpgrader.Core
+namespace XmlUpgrader.Core.MigrationStrategy
 {
     using System.Xml.Linq;
 
