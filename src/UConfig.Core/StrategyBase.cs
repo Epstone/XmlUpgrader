@@ -2,12 +2,12 @@
 {
     using System.Xml.Linq;
 
-    public abstract class StrategyBase
+    internal abstract class StrategyBase
     {
         protected dynamic settingsTree;
         protected XElement workingTree;
 
-        public StrategyBase(XElement workingTree, dynamic settingsTree)
+        protected StrategyBase(XElement workingTree, dynamic settingsTree)
         {
             this.workingTree = workingTree;
             this.settingsTree = settingsTree;

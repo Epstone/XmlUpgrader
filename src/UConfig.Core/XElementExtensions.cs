@@ -9,7 +9,7 @@
     using System.Xml.Linq;
     using System.Xml.Schema;
 
-    internal static class MyExtensions
+    internal static class XElementExtensions
     {
         internal static string ToStringAlignAttributes(this XDocument document)
         {

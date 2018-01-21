@@ -4,18 +4,18 @@
 
     internal class OneVersionUpgrader
     {
-        private readonly ConfigurationFile configFile;
+        private readonly XmlFile configFile;
         private readonly UpgradePlan upgradePlan;
         private XElement workingTree;
 
 
-        public OneVersionUpgrader(UpgradePlan upgradePlan, ConfigurationFile configFile)
+        internal OneVersionUpgrader(UpgradePlan upgradePlan, XmlFile configFile)
         {
             this.upgradePlan = upgradePlan;
             this.configFile = configFile;
         }
 
-        public ConfigurationFile Upgrade()
+        internal XmlFile Upgrade()
         {
             workingTree = new XElement(configFile.Document);
 
@@ -37,7 +37,7 @@
                 strategy.Execute();
             }
 
-            return new ConfigurationFile
+            return new XmlFile
             {
                 Document = workingTree,
                 Version = upgradePlan.UpgradeToVersion

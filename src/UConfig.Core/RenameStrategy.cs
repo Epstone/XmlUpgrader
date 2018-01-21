@@ -7,11 +7,11 @@
 
     internal class RenameStrategy : StrategyBase
     {
-        public RenameStrategy(XElement workingTree, dynamic renamingTree) : base(workingTree, (object) renamingTree)
+        internal RenameStrategy(XElement workingTree, dynamic renamingTree) : base(workingTree, (object) renamingTree)
         {
         }
 
-        public void Execute()
+        internal void Execute()
         {
             this.TraverseTree(settingsTree, string.Empty, workingTree);
         }

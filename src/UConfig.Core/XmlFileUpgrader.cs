@@ -25,7 +25,7 @@
                 var nextRegistration = registrations[i + 1];
 
                 var upgrader = new OneVersionUpgrader(registration.GetUpgradePlan(), registration.File);
-                ConfigurationFile upgradeConfig = upgrader.Upgrade();
+                XmlFile upgradeConfig = upgrader.Upgrade();
 
                 // execute the update and compare with reference version
                 upgradeConfig.VerifyEqualTo(nextRegistration.File);
@@ -34,7 +34,7 @@
 
         public UpgradeResult UpgradeXml(string xmlToUpgrade)
         {
-            ConfigurationFile configToUpgrade = ConfigurationFile.LoadXml(xmlToUpgrade);
+            XmlFile configToUpgrade = XmlFile.LoadXml(xmlToUpgrade);
 
             if (configToUpgrade.Version.Equals(extendedRegistrations.Max(x => x.Version)))
             {
@@ -79,7 +79,7 @@
 
         public void LoadFile()
         {
-            File = ConfigurationFile.LoadXml(FilePath);
+            File = XmlFile.LoadXml(FilePath);
         }
 
         public UpgradePlan GetUpgradePlan()
@@ -91,6 +91,6 @@
 
         internal string FilePath { get; set; }
 
-        public ConfigurationFile File { get; set; }
+        public XmlFile File { get; set; }
     }
 }

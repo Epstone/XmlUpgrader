@@ -6,11 +6,11 @@
 
     internal class ExtensionStrategy : StrategyBase
     {
-        public ExtensionStrategy(XElement workingTree, dynamic addedSettings) : base(workingTree, (object) addedSettings)
+        internal ExtensionStrategy(XElement workingTree, dynamic addedSettings) : base(workingTree, (object) addedSettings)
         {
         }
 
-        public void Execute()
+        internal void Execute()
         {
             this.TraverseTree(settingsTree, string.Empty, workingTree);
         }

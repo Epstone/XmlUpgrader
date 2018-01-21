@@ -38,9 +38,9 @@
         internal dynamic RenamingSettings { get; set; }
 
         internal dynamic AddedSettings { get; set; }
+        
+        public List<string> RemovedElements { get; set; } = new List<string>();
 
         public Version UpgradeToVersion { get; internal set; }
-
-        public List<string> RemovedElements { get; set; } = new List<string>();
     }
 }

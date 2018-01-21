@@ -55,7 +55,7 @@
         [Fact]
         public void AddElement()
         {
-            ConfigurationFile configFile = ConfigurationFile.FromXElement(DefaultXmlVersionOne);
+            XmlFile configFile = XmlFile.FromXElement(DefaultXmlVersionOne);
 
             dynamic elementsToAdd = new ExpandoObject();
             elementsToAdd.AddedNumber = "3";
@@ -66,7 +66,7 @@
 
             var fileUpgrader = new OneVersionUpgrader(upgradePlan, configFile);
 
-            ConfigurationFile upgradedConfig = fileUpgrader.Upgrade();
+            XmlFile upgradedConfig = fileUpgrader.Upgrade();
             upgradedConfig.Document.Element("AddedNumber").Value.Should().Be("3");
             upgradedConfig.Version.Should().Be(Version2Oh);
         }
@@ -74,7 +74,7 @@
         [Fact]
         public void AddElementStructure()
         {
-            ConfigurationFile configFile = ConfigurationFile.FromXElement(DefaultXmlVersionOne);
+            XmlFile configFile = XmlFile.FromXElement(DefaultXmlVersionOne);
 
             dynamic elementsToAdd = new ExpandoObject();
             elementsToAdd.AddedStructure = new ExpandoObject();
@@ -84,14 +84,14 @@
             .AddElements(elementsToAdd);
 
             var fileUpgrader = new OneVersionUpgrader(upgradePlan, configFile);
-            ConfigurationFile upgradedConfig = fileUpgrader.Upgrade();
+            XmlFile upgradedConfig = fileUpgrader.Upgrade();
             upgradedConfig.Document.Element("AddedStructure").Element("SettingOne").Value.Should().Be("works");
         }
 
         [Fact]
         public void ExtendDeepElementStructure()
         {
-            ConfigurationFile configFile = ConfigurationFile.FromXElement(DeepStructuredXmlVersionOne);
+            XmlFile configFile = XmlFile.FromXElement(DeepStructuredXmlVersionOne);
 
             dynamic elementsToAdd = new ExpandoObject();
             elementsToAdd.ExampleStructure = new ExpandoObject();
@@ -101,7 +101,7 @@
                                     .AddElements(elementsToAdd);
 
             var fileUpgrader = new OneVersionUpgrader(upgradePlan, configFile);
-            ConfigurationFile upgradedConfig = fileUpgrader.Upgrade();
+            XmlFile upgradedConfig = fileUpgrader.Upgrade();
             upgradedConfig.Document.Element("ExampleStructure").Element("DeepSettingOne").Value.Should().Be("One");
             upgradedConfig.Document.Element("ExampleStructure").Element("DeepSettingTwo").Value.Should().Be("Two");
             upgradedConfig.Document.Elements("ExampleStructure").Count().Should().Be(1);
@@ -110,7 +110,7 @@
         [Fact]
         public void RenameElement()
         {
-            ConfigurationFile configFile = ConfigurationFile.FromXElement(DefaultXmlVersionOne);
+            XmlFile configFile = XmlFile.FromXElement(DefaultXmlVersionOne);
 
             //var map = new RenameMap()
             dynamic renameMap = new ExpandoObject();
@@ -120,7 +120,7 @@
                 .RenameElements(renameMap);
 
             var fileUpgrader = new OneVersionUpgrader(upgradePlan, configFile);
-            ConfigurationFile upgradedConfig = fileUpgrader.Upgrade();
+            XmlFile upgradedConfig = fileUpgrader.Upgrade();
             upgradedConfig.Document.Element("ExampleString").Should().BeNull();
             upgradedConfig.Document.Element("ExampleStringRenamed").Value.Should().Be("test");
         }
@@ -128,7 +128,7 @@
         [Fact]
         public void MoveElement()
         {
-            ConfigurationFile configFile = ConfigurationFile.FromXElement(DefaultXmlVersionOne);
+            XmlFile configFile = XmlFile.FromXElement(DefaultXmlVersionOne);
 
             dynamic renameMap = new ExpandoObject();
             renameMap.TestStructure = new ExpandoObject();
@@ -138,7 +138,7 @@
                 .RenameElements(renameMap);
 
             var fileUpgrader = new OneVersionUpgrader(upgradePlan, configFile);
-            ConfigurationFile upgradedConfig = fileUpgrader.Upgrade();
+            XmlFile upgradedConfig = fileUpgrader.Upgrade();
             upgradedConfig.Document.Element("ExampleString").Should().BeNull();
             upgradedConfig.Document.Should().HaveElement("TestStructure").Which.
                 Should().HaveElement("MovedSetting").Which.Value.Should().Be("test");
@@ -147,7 +147,7 @@
         [Fact]
         public void RemoveElement()
         {
-            ConfigurationFile configFile = ConfigurationFile.FromXElement(DefaultXmlVersionOne);
+            XmlFile configFile = XmlFile.FromXElement(DefaultXmlVersionOne);
 
             var removeElements = new List<string>();
 
@@ -159,7 +159,7 @@
                 .RemoveElements(removeElements).AddElements(test);
 
             var fileUpgrader = new OneVersionUpgrader(upgradePlan, configFile);
-            ConfigurationFile upgradedConfig = fileUpgrader.Upgrade();
+            XmlFile upgradedConfig = fileUpgrader.Upgrade();
             upgradedConfig.Document.Should().NotBeNull();
             upgradedConfig.Document.Element("ExampleString").Should().BeNull();
         }
@@ -172,14 +172,14 @@
             configXml.Attribute("version").Remove();
             configXml.Attribute("version").Should().BeNull();
 
-            var upgradableFile = ConfigurationFile.FromXElement(configXml);
+            var upgradableFile = XmlFile.FromXElement(configXml);
 
             var upgradePlan = new UpgradePlan().SetVersion(Version2Oh)
                 .RemoveElements(new[] { "/ExampleString" });
 
             var fileUpgrader = new OneVersionUpgrader(upgradePlan, upgradableFile);
 
-            ConfigurationFile upgradedFile = fileUpgrader.Upgrade();
+            XmlFile upgradedFile = fileUpgrader.Upgrade();
             upgradedFile.Version.Should().Be(Version2Oh);
         }
 
@@ -190,7 +190,7 @@
             var config = DefaultXmlVersionOne;
             config.Attribute("version").Value = Version2Oh.ToString();
 
-            var configFile = ConfigurationFile.FromXElement(config);
+            var configFile = XmlFile.FromXElement(config);
             configFile.Version.Should().Be(Version2Oh);
 
 
@@ -203,7 +203,7 @@
 
 
             var upgrader = new OneVersionUpgrader(plan, configFile);
-            ConfigurationFile upgradedConfig = upgrader.Upgrade();
+            XmlFile upgradedConfig = upgrader.Upgrade();
             upgradedConfig.Version.Should().Be(Version3Oh);
         }
 

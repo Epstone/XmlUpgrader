@@ -9,13 +9,13 @@
         private readonly List<string> removedElements;
         private readonly XElement workingTree;
 
-        public RemoveStrategy(XElement workingTree, List<string> removedElements)
+        internal RemoveStrategy(XElement workingTree, List<string> removedElements)
         {
             this.workingTree = workingTree;
             this.removedElements = removedElements;
         }
 
-        public void Execute()
+        internal void Execute()
         {
             removedElements.ForEach(x =>
                 {

@@ -3,30 +3,30 @@
     using System;
     using System.Xml.Linq;
 
-    internal class ConfigurationFile
+    internal class XmlFile
     {
-        public void VerifyEqualTo(ConfigurationFile updatedConfig)
+        public void VerifyEqualTo(XmlFile updatedConfig)
         {
             XmlUtils.DeepEqualsWithNormalization(new XDocument(Document), new XDocument(updatedConfig.Document), null); //todo remove null
         }
 
-        public static ConfigurationFile LoadXml(string xmlPath)
+        public static XmlFile LoadXml(string xmlPath)
         {
-            return LoadFromXmlElement(XElement.Load(xmlPath));
+            return LoadFromXElement(XElement.Load(xmlPath));
         }
 
-        public static ConfigurationFile FromXElement(XElement xml)
+        public static XmlFile FromXElement(XElement xml)
         {
-            return LoadFromXmlElement(xml);
+            return LoadFromXElement(xml);
         }
 
         public Version Version { get; set; }
 
         public XElement Document { get; set; }
 
-        private static ConfigurationFile LoadFromXmlElement(XElement xml)
+        private static XmlFile LoadFromXElement(XElement xml)
         {
-            var result = new ConfigurationFile();
+            var result = new XmlFile();
             result.Document = xml;
             XAttribute versionAttribute = result.Document.Attribute("version");
 
