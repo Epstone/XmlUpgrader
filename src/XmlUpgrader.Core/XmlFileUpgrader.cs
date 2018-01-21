@@ -6,23 +6,23 @@ namespace XmlUpgrader.Core
 
     public class XmlFileUpgrader
     {
-        private readonly List<Registration> extendedRegistrations = new List<Registration>();
+        private readonly List<Registration> registrations = new List<Registration>();
 
         public void Verify()
         {
-            if (extendedRegistrations.Count == 1)
+            if (registrations.Count == 1)
             {
                 throw new InvalidOperationException("just one XML file found, nothing to upgrade.");
             }
 
-            extendedRegistrations.ForEach(x => x.LoadFile());
+            registrations.ForEach(x => x.LoadFile());
 
             // verify, that we have an upgrade script to the next version
-            var registrations = extendedRegistrations.OrderBy(x => x.Version).ToArray();
-            for (var i = 1; i < registrations.Length - 1; i++)
+            var sortedRegistrations = registrations.OrderBy(x => x.Version).ToArray();
+            for (var i = 1; i < sortedRegistrations.Length - 1; i++)
             {
-                var registration = registrations[i];
-                var nextRegistration = registrations[i + 1];
+                var registration = sortedRegistrations[i];
+                var nextRegistration = sortedRegistrations[i + 1];
 
                 var upgrader = new OneVersionUpgrader(registration.GetUpgradePlan(), registration.File);
                 XmlFile upgradedXmlFile = upgrader.Upgrade();
@@ -36,7 +36,7 @@ namespace XmlUpgrader.Core
         {
             XmlFile xmlToUpgrade = XmlFile.LoadXml(xmlToUpgradeFilePath);
 
-            if (xmlToUpgrade.Version.Equals(extendedRegistrations.Max(x => x.Version)))
+            if (xmlToUpgrade.Version.Equals(registrations.Max(x => x.Version)))
             {
                 return new UpgradeResult
                 {
@@ -44,7 +44,7 @@ namespace XmlUpgrader.Core
                 };
             }
 
-            IEnumerable<Registration> upgradesToApply = extendedRegistrations
+            IEnumerable<Registration> upgradesToApply = registrations
                 .OrderBy(x => x.Version)
                 .Where(x => x.Version > xmlToUpgrade.Version)
                 .ToArray();
@@ -62,7 +62,7 @@ namespace XmlUpgrader.Core
 
         public void AddRegistration(Version version, string filePath, Type type = null)
         {
-            extendedRegistrations.Add(new Registration(filePath, version, type));
+            registrations.Add(new Registration(filePath, version, type));
         }
     }
 
