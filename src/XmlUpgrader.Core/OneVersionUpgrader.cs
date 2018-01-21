@@ -32,9 +32,9 @@ namespace XmlUpgrader.Core
                 renameStrategy.Execute();
             }
 
-            if (upgradePlan.AddedSettings != null)
+            if (upgradePlan.AddedElements != null)
             {
-                ExtensionStrategy strategy = new ExtensionStrategy(workingTree, upgradePlan.AddedSettings);
+                ExtensionStrategy strategy = new ExtensionStrategy(workingTree, upgradePlan.AddedElements);
                 strategy.Execute();
             }
 

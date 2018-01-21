@@ -7,7 +7,7 @@ namespace XmlUpgrader.Core
     {
         public UpgradePlan AddElements(dynamic elementsToAdd)
         {
-            AddedSettings = elementsToAdd;
+            AddedElements = elementsToAdd;
             return this;
         }
 
@@ -37,7 +37,7 @@ namespace XmlUpgrader.Core
 
         internal dynamic RenamedElements { get; set; }
 
-        internal dynamic AddedSettings { get; set; }
+        internal dynamic AddedElements { get; set; }
         
         public List<string> RemovedElements { get; set; } = new List<string>();
 
