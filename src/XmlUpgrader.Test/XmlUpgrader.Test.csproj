@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="..\packages\xunit.core.2.3.1\build\xunit.core.props" Condition="Exists('..\packages\xunit.core.2.3.1\build\xunit.core.props')" />
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
@@ -192,7 +192,7 @@
     <Compile Include="Examples\ExampleRenamingConfig_v2.cs" />
     <Compile Include="Examples\ExampleConfig_v2.cs" />
     <Compile Include="IntegrationTest\UpgradeXmlTest.cs" />
-    <Compile Include="UnitTest\FileUpgraderTests.cs" />
+    <Compile Include="UnitTest\OneVersionUpgraderTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

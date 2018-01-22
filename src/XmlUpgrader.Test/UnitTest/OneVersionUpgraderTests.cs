@@ -4,14 +4,12 @@ namespace XmlUpgrader.Test.UnitTest
     using System.Collections.Generic;
     using System.Dynamic;
     using System.Linq;
-    using System.Linq.Expressions;
     using System.Xml.Linq;
     using Core;
-    using Examples;
     using FluentAssertions;
     using Xunit;
 
-    public class FileUpgraderTests
+    public class OneVersionUpgraderTests
     {
         private Version Version2Oh = new Version(2,0);
         private Version Version3Oh = new Version(3,0);
