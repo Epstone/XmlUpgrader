@@ -1,6 +1,7 @@
 namespace XmlUpgrader.Test.IntegrationTest
 {
     using System;
+    using System.Diagnostics;
     using System.IO;
     using Core;
     using Examples;
@@ -26,6 +27,17 @@ namespace XmlUpgrader.Test.IntegrationTest
             upgrader.AddRegistration(version_2, @"Examples\Xml\Config_v2.xml", typeof(ExampleConfigV2));
 
             upgrader.Verify();
+        }
+
+        [Fact]
+        public void IncorrectUpgradeScriptThrowsException()
+        {
+            var upgrader = new XmlFileUpgrader();
+
+            upgrader.AddRegistration(version_1, @"Examples\Xml\Config_v1.xml");
+            upgrader.AddRegistration(version_2, @"Examples\Xml\Config_v2-bad.xml", typeof(ExampleConfigV2));
+
+            Assert.Throws<InvalidOperationException>(() => upgrader.Verify());
         }
 
         [Fact]

@@ -7,7 +7,11 @@ namespace XmlUpgrader.Core
     {
         public void VerifyEqualTo(XmlFile upgradedXmlFile)
         {
-            XmlUtils.DeepEqualsWithNormalization(new XDocument(Document), new XDocument(upgradedXmlFile.Document), null); //todo remove null
+            bool areEqual = XmlUtils.DeepEqualsWithNormalization(new XDocument(Document), new XDocument(upgradedXmlFile.Document), null);
+            if (!areEqual)
+            {
+                throw new InvalidOperationException("Xml upgrade script does not create the expected reference content.");
+            }
         }
 
         public static XmlFile LoadXml(string xmlPath)

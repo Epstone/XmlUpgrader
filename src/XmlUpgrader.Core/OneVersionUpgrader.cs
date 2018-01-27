@@ -38,6 +38,16 @@ namespace XmlUpgrader.Core
                 strategy.Execute();
             }
 
+            XAttribute versionAttribute = workingTree.Attribute("version");
+            if (versionAttribute == null)
+            {
+                workingTree.Add(new XAttribute("version", upgradePlan.UpgradeToVersion.ToString()));
+            }
+            else
+            {
+                versionAttribute.Value = upgradePlan.UpgradeToVersion.ToString();
+            }
+
             return new XmlFile
             {
                 Document = workingTree,

@@ -211,6 +211,9 @@
     <Content Include="Examples\Xml\Config_v2.xml">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Examples\Xml\Config_v2-bad.xml">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\XmlUpgrader.Core\XmlUpgrader.Core.csproj">

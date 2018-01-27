@@ -3,6 +3,7 @@ namespace XmlUpgrader.Core
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Xml;
 
     public class XmlFileUpgrader
     {
@@ -12,29 +13,26 @@ namespace XmlUpgrader.Core
         {
             if (registrations.Count == 1)
             {
-                throw new InvalidOperationException("just one XML file found, nothing to upgrade.");
+                throw new InvalidOperationException("just one registration, nothing to upgrade or verify.");
             }
 
-            registrations.ForEach(x => x.LoadFile());
-
-            // verify, that we have an upgrade script to the next version
-            var sortedRegistrations = registrations.OrderBy(x => x.Version).ToArray();
-            for (var i = 1; i < sortedRegistrations.Length - 1; i++)
+            Action<XmlFile> verifyAction = upgradedFile =>
             {
-                var registration = sortedRegistrations[i];
-                var nextRegistration = sortedRegistrations[i + 1];
+                Registration referenceRegistration = registrations.FirstOrDefault(registration => registration.Version == upgradedFile.Version);
+                referenceRegistration.LoadFile();
+                upgradedFile.VerifyEqualTo(referenceRegistration.File);
+            };
 
-                var upgrader = new OneVersionUpgrader(registration.GetUpgradePlan(), registration.File);
-                XmlFile upgradedXmlFile = upgrader.Upgrade();
-
-                // execute the update and compare with reference version
-                upgradedXmlFile.VerifyEqualTo(nextRegistration.File);
-            }
-
+            RunUpgradesAndExecuteAction(registrations.OrderBy(x => x.Version).First().FilePath, verifyAction);
             // todo edge cases
         }
 
         public UpgradeResult UpgradeXml(string xmlToUpgradeFilePath)
+        {
+            return RunUpgradesAndExecuteAction(xmlToUpgradeFilePath, xmlFile => xmlFile.Document.Save(xmlToUpgradeFilePath));
+        }
+
+        private UpgradeResult RunUpgradesAndExecuteAction(string xmlToUpgradeFilePath, Action<XmlFile> documentOperation)
         {
             XmlFile xmlToUpgrade = XmlFile.LoadXml(xmlToUpgradeFilePath);
             if (xmlToUpgrade.Version.Equals(registrations.Max(x => x.Version)))
@@ -58,13 +56,20 @@ namespace XmlUpgrader.Core
                 xmlToUpgrade = upgrader.Upgrade();
             }
 
-            xmlToUpgrade.Document.Save(xmlToUpgradeFilePath);
+            if (documentOperation != null)
+            {
+                documentOperation(xmlToUpgrade); // save or verify
+            }
+            else
+            {
+                throw new InvalidOperationException();
+            }
 
             return new UpgradeResult()
             {
-                 UpgradeNeeded = true,
-                 UpgradedFromVersion = initialVersion,
-                 UpgradedToVersion = xmlToUpgrade.Version
+                UpgradeNeeded = true,
+                UpgradedFromVersion = initialVersion,
+                UpgradedToVersion = xmlToUpgrade.Version
             };
         }
 
@@ -92,7 +97,7 @@ namespace XmlUpgrader.Core
 
         public UpgradePlan GetUpgradePlan()
         {
-            UpgradePlan upgradePlan = ((IUpgradePlanProvider) Activator.CreateInstance(type)).GetUpgradePlan();
+            UpgradePlan upgradePlan = ((IUpgradePlanProvider)Activator.CreateInstance(type)).GetUpgradePlan();
             upgradePlan.SetVersion(this.Version);
             return upgradePlan;
         }
