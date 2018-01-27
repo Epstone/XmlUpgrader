@@ -1,5 +1,5 @@
 # XmlUpgrader .net standard
-Easy to use .net standard library for upgrading xml documends to a new format. It supports:
+Easy to use .net standard library for upgrading xml documents to a new format. It supports:
 * Renaming nodes, adding nodes, removing nodes or execute custom xml operations
 * Set new default values
 * Includes automated tests for your upgrade scripts to produce the correct format
