@@ -81,7 +81,7 @@ public void DetailedRegistration()
 }
 ```
 # Conventions
-Xml file should have a version tag in its root node e.g
+* Xml file should have a version tag in its root node e.g.
 ```xml
 <?xml version="1.0" encoding="utf-8"?>
 <configuration version="1.0">
@@ -90,3 +90,7 @@ Xml file should have a version tag in its root node e.g
 </configuration>
 ```
 XmlUpgrader uses internally `System.Version`. Visit [MSDN](https://msdn.microsoft.com/en-us/en-en/library/system.version(v=vs.110).aspx) for information on string formatting.
+* Keep all file versions in your project to use the `.Verify()` method e.g.
+  * ServerConfigurationV1.0.xml
+  * ServerConfigurationV2.0.xml
+  
