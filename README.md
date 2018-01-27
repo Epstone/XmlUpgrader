@@ -10,7 +10,7 @@ Easy to use .net standard library for upgrading xml documents to a new format. I
 var upgrader = new XmlFileUpgrader();
 
 upgrader.AddRegistration(new Version(1, 0), xmlToUpgradeFilePath);
-upgrader.AddRegistration(new Version(2, 0), xmlUpgradeReferencePath, typeof(ExampleConfigV2));
+upgrader.AddRegistration(new Version(2, 0), xmlUpgradeReferencePath, typeof(ExampleXmlVersion2));
 
 var result = upgrader.UpgradeXml(xmlToUpgradeFilePath);
 ```
