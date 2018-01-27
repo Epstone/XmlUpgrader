@@ -12,7 +12,12 @@ var upgrader = new XmlFileUpgrader();
 upgrader.AddRegistration(new Version(1, 0), xmlToUpgradeFilePath);
 upgrader.AddRegistration(new Version(2, 0), xmlUpgradeReferencePath, typeof(ExampleXmlVersion2));
 
-var result = upgrader.UpgradeXml(xmlToUpgradeFilePath);
+UpgradeResult result = upgrader.UpgradeXml(xmlToUpgradeFilePath);
+// result.UpgradeNeeded -> true
+// result.UpgradedFromVersion -> Version 1.0
+// result.UpgradedToVersion -> Version 2.0
+        
+
 ```
 ## Implement an upgrade plan
 * Create a class which implements `IUpgradePlanProvider`
