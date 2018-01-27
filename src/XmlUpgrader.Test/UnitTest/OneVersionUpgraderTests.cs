@@ -150,10 +150,8 @@ namespace XmlUpgrader.Test.UnitTest
             var removeElements = new List<string>();
             removeElements.Add("/ExampleString");
 
-            var test = new ExpandoObject();
-
             var upgradePlan = new UpgradePlan().SetVersion(Version2Oh)
-                .RemoveElements(removeElements).AddElements(test);
+                .RemoveElements(removeElements);
 
             var fileUpgrader = new OneVersionUpgrader(upgradePlan, configFile);
             XmlFile upgradedConfig = fileUpgrader.Upgrade();
