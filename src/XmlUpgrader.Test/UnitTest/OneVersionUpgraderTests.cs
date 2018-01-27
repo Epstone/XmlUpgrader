@@ -148,7 +148,6 @@ namespace XmlUpgrader.Test.UnitTest
             XmlFile configFile = XmlFile.FromXElement(DefaultXmlVersionOne);
 
             var removeElements = new List<string>();
-
             removeElements.Add("/ExampleString");
 
             var test = new ExpandoObject();

@@ -52,13 +52,13 @@ namespace XmlUpgrader.Test.IntegrationTest
             string xmlToUpgradeFilePath = GetVersionOneCopy();
             var xmlUpgradeReferencePath = GetVersionTwoCopy();
 
-            var upgrader = new XmlFileUpgrader();
+var upgrader = new XmlFileUpgrader();
 
-            upgrader.AddRegistration(version_1, xmlToUpgradeFilePath);
-            upgrader.AddRegistration(version_2, xmlUpgradeReferencePath, typeof(ExampleConfigV2));
+upgrader.AddRegistration(new Version(1, 0), xmlToUpgradeFilePath);
+upgrader.AddRegistration(new Version(2, 0), xmlUpgradeReferencePath, typeof(ExampleConfigV2));
 
-            var result = upgrader.UpgradeXml(xmlToUpgradeFilePath);
-            result.UpgradeNeeded.Should().BeTrue();
+var result = upgrader.UpgradeXml(xmlToUpgradeFilePath);
+result.UpgradeNeeded.Should().BeTrue();
 
             VerifyEquivalent<ExampleConfigV2>(xmlToUpgradeFilePath, xmlUpgradeReferencePath);
 
