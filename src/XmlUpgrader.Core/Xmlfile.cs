@@ -5,13 +5,10 @@ namespace XmlUpgrader.Core
 
     internal class XmlFile
     {
-        public void VerifyEqualTo(XmlFile upgradedXmlFile)
+        public bool VerifyEqualTo(XmlFile otherXmlFile)
         {
-            bool areEqual = XmlUtils.DeepEqualsWithNormalization(new XDocument(Document), new XDocument(upgradedXmlFile.Document), null);
-            if (!areEqual)
-            {
-                throw new InvalidOperationException("Xml upgrade script does not create the expected reference content.");
-            }
+            return XmlUtils.DeepEqualsWithNormalization(new XDocument(Document), new XDocument(otherXmlFile.Document), null);
+            
         }
 
         public static XmlFile LoadXml(string xmlPath)

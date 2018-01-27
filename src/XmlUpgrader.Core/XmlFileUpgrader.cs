@@ -3,6 +3,7 @@ namespace XmlUpgrader.Core
     using System;
     using System.Collections.Generic;
     using System.Linq;
+    using System.Text;
     using System.Xml;
 
     public class XmlFileUpgrader
@@ -20,7 +21,19 @@ namespace XmlUpgrader.Core
             {
                 Registration referenceRegistration = registrations.FirstOrDefault(registration => registration.Version == upgradedFile.Version);
                 referenceRegistration.LoadFile();
-                upgradedFile.VerifyEqualTo(referenceRegistration.File);
+                bool areEqual = upgradedFile.VerifyEqualTo(referenceRegistration.File);
+
+                if (!areEqual)
+                {
+                    var errorMessageBuilder = new StringBuilder();
+                    errorMessageBuilder.AppendLine("Xml upgrade script does not create the expected reference content.");
+                    errorMessageBuilder.AppendLine($"Tried to upgrade to version {referenceRegistration.Version}");
+                    errorMessageBuilder.AppendLine($"Upgrade result: {upgradedFile.Document}");
+                    errorMessageBuilder.AppendLine($"Reference xml: {referenceRegistration.File.Document}");
+
+                    throw new InvalidOperationException(errorMessageBuilder.ToString());
+                }
+
             };
 
             RunUpgradesAndExecuteAction(registrations.OrderBy(x => x.Version).First().FilePath, verifyAction);
