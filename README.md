@@ -5,12 +5,13 @@ Easy to use .net standard library for upgrading xml documends to a new format. I
 * Includes automated tests for your upgrade scripts to produce the correct format
 
 
-## Usage
-```
+## Usage of XmlFileUpgrader
+```c#
 var upgrader = new XmlFileUpgrader();
 
 upgrader.AddRegistration(new Version(1, 0), xmlToUpgradeFilePath);
-upgrader.AddRegistration(new Version(2, 0), xmlUpgradeReferencePath, typeof(ExampleConfigV2));
+upgrader.AddRegistration(new Version(2, 0), xmlUpgradeReferencePath, typeof(ExamtpleConfigV2));
 
 var result = upgrader.UpgradeXml(xmlToUpgradeFilePath);
 ```
+## How to create an upgrade script for one version
