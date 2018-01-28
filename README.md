@@ -8,8 +8,8 @@ Easy to use .net standard library for upgrading xml documents to a new format. I
 ```c#
 var upgrader = new XmlFileUpgrader();
 
-upgrader.AddRegistration(new Version(1, 0), xmlToUpgradeFilePath);
-upgrader.AddRegistration(new Version(2, 0), xmlUpgradeReferencePath, typeof(ExampleXmlVersion2));
+upgrader.AddRegistration(new Version(1, 0), "XmlFileV1.0.xml");
+upgrader.AddRegistration(new Version(2, 0), "XmlFileV2.0.xml", typeof(ExampleXmlVersion2));
 
 UpgradeResult result = upgrader.UpgradeXml(xmlToUpgradeFilePath);
 // result.UpgradeNeeded -> true
